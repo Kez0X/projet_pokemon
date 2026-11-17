@@ -25,11 +25,19 @@ LOTS = SORTIE / "lots"
 ANCRE = "Gengar"
 PERIODE = "2021-11-01 2026-10-31"  # 5 années complètes
 PAUSE = 12  # secondes entre deux requêtes
+# Orthographes de PokéAPI que Google ne reconnaît pas (0 partout) → terme recherché
+TERMES_CORRIGES = {
+    "Farfetch’d": "Farfetch'd",  # apostrophe typographique → droite
+    "Sirfetch’d": "Sirfetch'd",
+    "Mime Jr.": "Mime Jr",  # point final
+    "Mr. Rime": "Mr Rime",
+}
 
 
 def noms_anglais():
     noms = pd.read_csv(RACINE / "data" / "raw" / "pokeapi" / "pokemon_species_names.csv")
-    return noms[noms.local_language_id == 9].sort_values("pokemon_species_id").name.tolist()
+    en = noms[noms.local_language_id == 9].sort_values("pokemon_species_id").name
+    return [TERMES_CORRIGES.get(n, n) for n in en]
 
 
 def main():

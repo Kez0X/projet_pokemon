@@ -4,25 +4,47 @@ Ce document liste les sources du projet et explique comment on a récupéré cha
 
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python scripts/download_pokeapi_noms.py      # à lancer en premier : les noms servent de clé
+.venv/bin/python scripts/download_pokeapi.py           # à lancer en premier : noms et identifiants servent de clé
+.venv/bin/python scripts/download_sprites.py           # ~130 Mo d'images
+.venv/bin/python scripts/build_starters.py             # écrit data/raw/starters/starters.csv
 .venv/bin/python scripts/download_reddit_2019.py
 .venv/bin/python scripts/download_thetoyzone.py
 .venv/bin/python scripts/download_google_trends.py     # très long (> 1 h), reprend où il s'est arrêté
+.venv/bin/python scripts/download_community_days.py
+.venv/bin/python scripts/download_sorties.py
 ```
 
-Les données ont été récupérées le **16/11/2026**.
+Les données ont été récupérées les **16 et 17/11/2026**. Toutes les données sont dans `data/raw/<source>/`. Celles qu'on ne peut pas retélécharger (Johto Times, Pokémon of the Year 2020, starters) sont versionnées ; les autres sont ignorées par Git et se retéléchargent avec les scripts.
 
 ---
 
-## 1. Noms des Pokémon : PokéAPI
+## 1. Noms et attributs des Pokémon : PokéAPI
 
 - **Source** : PokéAPI, fichiers CSV du dépôt GitHub (base reprise de veekun/pokedex).
   - https://pokeapi.co/about
   - https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv
-- **Fichiers récupérés** : `pokemon_species_names.csv` (nom de chaque espèce dans chaque langue) et `languages.csv` (correspondance entre identifiant et langue).
-- **Comment** : téléchargement direct des CSV bruts (`raw.githubusercontent.com`) avec `scripts/download_pokeapi_noms.py`.
-- **Contenu** : 1 025 espèces. Le nom anglais (`local_language_id = 9`) sert de clé pour interroger Google Trends. Les noms français et japonais serviront à l'axe Noms (Pokémonastics).
+- **Comment** : téléchargement direct des CSV bruts (`raw.githubusercontent.com`) avec `scripts/download_pokeapi.py`.
+- **Fichiers récupérés** (les tables sont reliées par des identifiants, la jointure se fera dans la préparation) :
+  - **noms** : `pokemon_species_names.csv` (nom de chaque espèce dans 12 langues, dont anglais, français, japonais en kana et en romaji, coréen, chinois) et `languages.csv` ;
+  - **espèces** : `pokemon_species.csv` (génération, espèce dont elle évolue, chaîne d'évolution, couleur officielle, forme du corps, légendaire, fabuleux, bébé, taux de capture…), avec `generations.csv`, `evolution_chains.csv`, `pokemon_colors.csv`, `pokemon_shapes.csv` ;
+  - **Pokémon (formes)** : `pokemon.csv` (taille en décimètres, poids en hectogrammes, forme par défaut ou non), `pokemon_types.csv` + `types.csv`, `pokemon_stats.csv` + `stats.csv` (6 statistiques de base).
+- **Contenu** : 1 025 espèces et 1 351 formes (dont 1 025 formes par défaut, une par espèce). Le nom anglais (`local_language_id = 9`) sert de clé pour interroger Google Trends. Les noms français et japonais serviront à l'axe Noms (Pokémonastics). Le stade d'évolution se déduit de `evolves_from_species_id`.
 - **Sortie** : `data/raw/pokeapi/`
+
+## 1 bis. Images officielles des Pokémon
+
+- **Source** : dépôt PokeAPI/sprites, dossier `official-artwork` (illustrations officielles de The Pokémon Company), https://github.com/PokeAPI/sprites
+- **Comment** : `scripts/download_sprites.py` télécharge `{numéro}.png` pour les 1 025 Pokémon (reprend là où il s'est arrêté).
+- **Pourquoi l'artwork officiel** plutôt que les sprites de jeu : le style est le même pour toutes les générations, ce qui rend les couleurs comparables. Fond transparent.
+- **Contenu** : 1 025 images PNG, environ 130 Mo. Elles serviront à calculer le nombre de couleurs et la couleur dominante (k-means sur les pixels).
+- **Sortie** : `data/raw/sprites/official_artwork/`
+
+## 1 ter. Pokémon de départ (starters)
+
+- **Source** : liste des starters de Bulbapedia, https://bulbapedia.bulbagarden.net/wiki/Starter_Pok%C3%A9mon
+- **Comment** : les 27 starters des jeux principaux (3 par génération : Plante, Feu, Eau) sont saisis à la main par leur numéro de Pokédex dans `scripts/build_starters.py`. Leurs évolutions sont retrouvées dans PokéAPI (`evolves_from_species_id`), ce qui vérifie aussi la saisie (le script contrôle la génération de chaque starter).
+- **Contenu** : 81 Pokémon (27 lignées × 3 stades), avec le type de starter, le starter de la lignée et le stade. Les partenaires de Pokémon Let's Go (Pikachu, Évoli) ne sont pas inclus.
+- **Sortie** : `data/raw/starters/starters.csv` (versionné)
 
 ## 2. Sondage Reddit r/pokemon 2019
 
@@ -64,7 +86,8 @@ Les données ont été récupérées le **16/11/2026**.
   2. pour pouvoir comparer les lots entre eux, chaque requête contient un même Pokémon de référence (**l'ancre, Gengar**) et 4 autres Pokémon. On obtient 256 lots qui couvrent les 1 025 Pokémon ;
   3. pour chaque lot, on récupère l'intérêt par pays (`interest_by_region`, résolution pays, petits volumes inclus) sur la période du **01/11/2021 au 31/10/2026** (5 années complètes) ;
   4. dans l'analyse, on divisera chaque valeur par celle de Gengar dans le même pays, pour ramener tous les Pokémon sur une même échelle ;
-  5. Google limite fortement le nombre de requêtes : le script fait une pause de 12 s entre deux lots, attend plus longtemps en cas de refus, et enregistre chaque lot dans un fichier à part. On peut donc le relancer, il reprend où il s'est arrêté.
+  5. Google limite fortement le nombre de requêtes : le script fait une pause de 12 s entre deux lots, attend plus longtemps en cas de refus, et enregistre chaque lot dans un fichier à part. On peut donc le relancer, il reprend où il s'est arrêté ;
+  6. **correction du 17/11** : 4 Pokémon valaient 0 dans tous les pays à cause de leur orthographe PokéAPI, que Google ne reconnaît pas. On cherche à la place : `Farfetch'd` et `Sirfetch'd` (apostrophe droite au lieu de ’), `Mime Jr` et `Mr Rime` (sans point). Les 4 lots concernés (20, 109, 215, 216) ont été refaits le 17/11, les autres datent du 16/11. Dans `interet_par_pays.csv`, la colonne `terme` contient donc le terme recherché, qui diffère du nom PokéAPI pour ces 4 Pokémon.
 - **Fichiers** : `lots/lot_XXX.csv` (un fichier par requête), puis `interet_par_pays.csv` (tous les lots : pays, terme, valeur, lot).
 - **Limites** :
   - les termes sont les **noms anglais**. Les noms ambigus (Ditto, Onix, Golem…) récupèrent d'autres recherches, et les pays qui cherchent dans une autre écriture (Japon, Corée, Chine…) sont sous-représentés. Les « sujets » Google (identifiants d'entité) régleraient ce problème, mais Google ne les reconnaît pas de façon fiable pour chaque Pokémon ;
@@ -79,7 +102,7 @@ Les données ont été récupérées le **16/11/2026**.
   - Fichier repris : dépôt `games_night_viz` de Will Sutton, https://github.com/wjsutton/games_night_viz/blob/main/challenges/1_player_select/pokemon_of_the_year_2020.xlsx
   - Présentation : https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_of_the_Year
 - **Comment** : fichier Excel téléchargé depuis le dépôt GitHub et ajouté tel quel au dépôt.
-- **Contenu** (`sources/pokemon_of_the_year_2020.xlsx`) :
+- **Contenu** (`data/raw/pokemon_of_the_year_2020/pokemon_of_the_year_2020.xlsx`) :
   - feuille `pokemon_of_the_year_2020` : 270 lignes, soit le top 30 de chacune des 8 régions de jeu (Kanto → Galar) et le top 30 général (`All`), avec les votes et le rang ;
   - feuille `pokemon_stats` : 1 032 Pokémon et formes avec leurs statistiques de jeu, repris du jeu de données Kaggle « All Pokémon dataset » (https://www.kaggle.com/maca11/all-pokemon-dataset).
 - **Limites** :
@@ -96,7 +119,7 @@ Les données ont été récupérées le **16/11/2026**.
   - OCR, votes cohérents avec le pourcentage : 1 014 Pokémon ;
   - lecture visuelle (dont texte retourné et animation) : 10 Pokémon ;
   - image officielle du Johto Times et différence avec le total : 1 Pokémon.
-- **Contenu** (`sources/johto_times_2025_preliminaire.csv`) : 1 025 Pokémon, avec le numéro de Pokédex, la génération, le nom anglais et français, les votes, le pourcentage et le rang dans la génération, le total des votes et le nombre de participants de la génération (de 14 478 pour la génération 1 à 9 254 pour la génération 9).
+- **Contenu** (`data/raw/johto_times_2025/johto_times_2025_preliminaire.csv`) : 1 025 Pokémon, avec le numéro de Pokédex, la génération, le nom anglais et français, les votes, le pourcentage et le rang dans la génération, le total des votes et le nombre de participants de la génération (de 14 478 pour la génération 1 à 9 254 pour la génération 9).
 - **Limites** :
   - **les votes sont comparés à l'intérieur d'une génération** : chaque participant vote dans chaque génération. Pour comparer deux Pokémon de générations différentes, il faut utiliser le pourcentage dans la génération, pas les votes bruts ;
   - ce sont des résultats préliminaires (étape par génération), pas le classement final ;
@@ -104,14 +127,26 @@ Les données ont été récupérées le **16/11/2026**.
 
 ---
 
-## Sources repérées mais pas encore récupérées
+## 7. Événements : Community Days de Pokémon GO
 
-| Source | Lien | Usage prévu |
-|---|---|---|
-| Attributs PokéAPI (types, stats, taille, poids…) | https://github.com/PokeAPI/pokeapi | Variables explicatives |
-| Bulbapedia (starters, anime) | https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon | Variables explicatives |
-| Sorties de jeux, films, anime | https://bulbapedia.bulbagarden.net/wiki/Core_series | Axe temps |
-| Community Days Pokémon GO | https://www.dittobase.com/pokemon-go/community-days | Axe temps |
+- **Source** : Dittobase, https://www.dittobase.com/pokemon-go/community-days (tableau HTML de tous les Community Days depuis janvier 2018).
+- **Comment** (`scripts/download_community_days.py`) : on lit chaque ligne du tableau : date, nom de l'événement (texte alternatif de l'image), Pokémon mis en avant (liens vers le Pokédex de Dittobase, parfois plusieurs par événement). Le nom du Pokémon est relié au numéro de Pokédex via les identifiants de PokéAPI ; les formes régionales (`vulpix-alola`, `ponyta-galarian`, `flabebe-red`…) sont ramenées à l'espèce.
+- **Contenu** : 129 événements, 159 lignes (une par événement × Pokémon), de janvier 2018 à février 2027. Les événements futurs sont gardés avec `a_venir = True` (leur Pokémon n'est souvent pas encore annoncé).
+- **Sortie** : `data/raw/evenements/community_days.csv`
+
+## 8. Événements : sorties des jeux, des films et des saisons de l'anime
+
+- **Sources** : Wikipedia anglais, lu via l'API MediaWiki (`action=parse`, une requête par page) :
+  - jeux : https://en.wikipedia.org/wiki/List_of_Pok%C3%A9mon_video_games
+  - films : https://en.wikipedia.org/wiki/List_of_Pok%C3%A9mon_films
+  - anime : https://en.wikipedia.org/wiki/Pok%C3%A9mon_(TV_series)
+- **Comment** (`scripts/download_sorties.py`) : lecture des tableaux de chaque page avec `pandas.read_html`.
+  - **jeux** : pour chaque jeu, la première date de sortie (Japon, ou monde quand la sortie est mondiale) et la rubrique de la page (jeux principaux et remakes, spin-off, Mystery Dungeon…). Les jeux mobiles ne sont décrits qu'en texte dans la page : **Pokémon GO (6 juillet 2016) est ajouté à la main** ;
+  - **films** : films de cinéma (animation et Détective Pikachu) et courts-métrages, repérés à part, avec la date de sortie au Japon et en Amérique du Nord. Les téléfilms et épisodes spéciaux sont écartés ;
+  - **anime** : début et fin de chaque saison (diffusion au Japon).
+- **Contenu** : 106 jeux (dont 24 jeux principaux), 25 films d'animation au cinéma, 1 film live-action, 27 courts-métrages, 29 saisons de l'anime. 4 titres n'ont pas encore de date (sorties à venir : Pokémon Winds and Waves, Pokémon Champions, Pokémon: Wild Card ; et Pokémon Play It!, sans date dans le tableau).
+- **Remarque** : contrairement à l'API Pageviews (écartée, voir plus bas), l'API MediaWiki a répondu normalement le 17/11.
+- **Sortie** : `data/raw/evenements/sorties.csv`
 
 ## Source écartée
 

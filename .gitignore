@@ -1,5 +1,10 @@
-# Données (re-téléchargeables)
-data/raw/
+# Données : tout est dans data/raw/<source>/
+# Ignorées : celles qu'on retélécharge avec scripts/
+# Versionnées : celles qu'on ne peut pas retélécharger (relevées ou saisies à la main)
+data/raw/*
+!data/raw/johto_times_2025/
+!data/raw/pokemon_of_the_year_2020/
+!data/raw/starters/
 data/processed/
 *.part
 
