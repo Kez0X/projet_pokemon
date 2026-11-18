@@ -12,6 +12,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python scripts/download_google_trends.py     # très long (> 1 h), reprend où il s'est arrêté
 .venv/bin/python scripts/download_community_days.py
 .venv/bin/python scripts/download_sorties.py
+.venv/bin/python scripts/download_naturalearth.py
 ```
 
 Les données ont été récupérées les **16 et 17/11/2026**. Toutes les données sont dans `data/raw/<source>/`. Celles qu'on ne peut pas retélécharger (Johto Times, Pokémon of the Year 2020, starters) sont versionnées ; les autres sont ignorées par Git et se retéléchargent avec les scripts.
@@ -147,6 +148,17 @@ Les données ont été récupérées les **16 et 17/11/2026**. Toutes les donné
 - **Contenu** : 106 jeux (dont 24 jeux principaux), 25 films d'animation au cinéma, 1 film live-action, 27 courts-métrages, 29 saisons de l'anime. 4 titres n'ont pas encore de date (sorties à venir : Pokémon Winds and Waves, Pokémon Champions, Pokémon: Wild Card ; et Pokémon Play It!, sans date dans le tableau).
 - **Remarque** : contrairement à l'API Pageviews (écartée, voir plus bas), l'API MediaWiki a répondu normalement le 17/11.
 - **Sortie** : `data/raw/evenements/sorties.csv`
+
+## 9. Contours des pays : Natural Earth
+
+- **Source** : Natural Earth, couche « Admin 0 – Countries » à l'échelle 1:50 m, domaine public.
+  - https://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-0-countries-2/
+  - fichier GeoJSON du dépôt officiel : https://github.com/nvkelso/natural-earth-vector
+- **Comment** : téléchargement direct du GeoJSON avec `scripts/download_naturalearth.py`.
+- **Pourquoi l'échelle 1:50 m** : l'échelle 1:110 m n'a pas les petits pays (Singapour, Hong Kong…) qui sont dans Google Trends.
+- **Contenu** : 242 pays et territoires, avec leurs contours et leurs codes ISO. Certains pays ont `ISO_A3 = -99` (la France, la Norvège…) : dans ce cas, on prend la colonne `ADM0_A3`.
+- **Utilisation** : poids spatiaux (k plus proches voisins entre les centres des pays) pour l'indice de Moran et le LISA du notebook 08.
+- **Sortie** : `data/raw/naturalearth/ne_50m_admin_0_countries.geojson`
 
 ## Source écartée
 
