@@ -3,3 +3,17 @@ requests
 openpyxl
 pytrends
 lxml
+jupyter
+matplotlib
+seaborn
+scipy
+scikit-learn
+statsmodels
+pillow
+networkx
+gensim
+plotly
+geopandas
+libpysal
+esda
+pycountry
