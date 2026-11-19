@@ -5,6 +5,7 @@ data/raw/*
 !data/raw/johto_times_2025/
 !data/raw/pokemon_of_the_year_2020/
 !data/raw/starters/
+!data/raw/dictionnaire/
 data/processed/
 *.part
 
