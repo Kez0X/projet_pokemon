@@ -40,33 +40,37 @@ def noms_anglais():
     return [TERMES_CORRIGES.get(n, n) for n in en]
 
 
-def main():
-    LOTS.mkdir(parents=True, exist_ok=True)
-    autres = [n for n in noms_anglais() if n != ANCRE]
-    lots = [autres[k:k + 4] for k in range(0, len(autres), 4)]
-    trends = TrendReq(hl="en-US", tz=0)
-
-    for i, lot in enumerate(lots):
-        fichier = LOTS / f"lot_{i:03d}.csv"
+def collecter(lots, dossier, trends):
+    """Collecte chaque lot (liste de termes) dans dossier/lot_<nom>.csv, en reprenant là où on s'est arrêté.
+    lots : dict {nom du lot: liste de termes}."""
+    dossier.mkdir(parents=True, exist_ok=True)
+    for k, (nom, termes) in enumerate(lots.items()):
+        fichier = dossier / f"lot_{nom}.csv"
         if fichier.exists():
             continue
         for essai in range(6):
             try:
-                trends.build_payload([ANCRE] + lot, timeframe=PERIODE)
+                trends.build_payload(termes, timeframe=PERIODE)
                 df = trends.interest_by_region(resolution="COUNTRY", inc_low_vol=True)
                 break
             except Exception as e:  # 429 (TooManyRequestsError) le plus souvent
                 attente = 60 * 2 ** essai
-                print(f"lot {i} : {type(e).__name__}, pause de {attente} s", flush=True)
+                print(f"lot {nom} : {type(e).__name__}, pause de {attente} s", flush=True)
                 time.sleep(attente)
         else:
-            raise SystemExit(f"lot {i} : abandon après 6 essais, relancer plus tard")
+            raise SystemExit(f"lot {nom} : abandon après 6 essais, relancer plus tard")
         long = (df.reset_index().melt(id_vars="geoName", var_name="terme", value_name="valeur")
                   .rename(columns={"geoName": "pays"}))
-        long["lot"] = i
+        long["lot"] = nom
         long.to_csv(fichier, index=False)
-        print(f"lot {i + 1}/{len(lots)} ok", flush=True)
+        print(f"lot {k + 1}/{len(lots)} ok ({nom})", flush=True)
         time.sleep(PAUSE)
+
+
+def main():
+    autres = [n for n in noms_anglais() if n != ANCRE]
+    lots = {f"{i:03d}": [ANCRE] + autres[k:k + 4] for i, k in enumerate(range(0, len(autres), 4))}
+    collecter(lots, LOTS, TrendReq(hl="en-US", tz=0))
 
     tout = pd.concat(pd.read_csv(f) for f in sorted(LOTS.glob("lot_*.csv")))
     tout.to_csv(SORTIE / "interet_par_pays.csv", index=False)
