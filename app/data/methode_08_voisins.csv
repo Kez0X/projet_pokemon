@@ -1,0 +1,68 @@
+pays,voisins
+Ireland,United Kingdom; Belgium; France; Netherlands
+Thailand,Vietnam; Malaysia; Hong Kong; Singapore
+United Kingdom,Ireland; Netherlands; Belgium; France
+Finland,Sweden; Norway; Poland; Denmark
+Portugal,Spain; France; Ireland; Belgium
+Vietnam,Thailand; Hong Kong; Taiwan; Malaysia
+Canada,United States; Mexico; Dominican Republic; Guatemala
+Australia,New Zealand; Indonesia; Singapore; Philippines
+Spain,Portugal; France; Switzerland; Belgium
+Norway,Finland; Sweden; Denmark; Poland
+Philippines,Indonesia; Vietnam; Singapore; Taiwan
+United States,Mexico; Canada; Guatemala; Honduras
+New Zealand,Australia; Indonesia; Philippines; Singapore
+Israel,Türkiye; Saudi Arabia; Greece; Bulgaria
+Malaysia,Singapore; Thailand; Indonesia; Vietnam
+South Korea,Japan; Taiwan; Hong Kong; Vietnam
+Sweden,Denmark; Finland; Poland; Netherlands
+Netherlands,Belgium; Denmark; Switzerland; United Kingdom
+Belgium,Netherlands; France; Switzerland; United Kingdom
+Dominican Republic,Puerto Rico; Trinidad & Tobago; Venezuela; Honduras
+Denmark,Netherlands; Sweden; Belgium; Czechia
+Singapore,Malaysia; Indonesia; Thailand; Vietnam
+Greece,Bulgaria; Serbia; Romania; Croatia
+Puerto Rico,Dominican Republic; Trinidad & Tobago; Venezuela; Colombia
+France,Belgium; Switzerland; Netherlands; United Kingdom
+Indonesia,Singapore; Malaysia; Philippines; Thailand
+South Africa,Saudi Arabia; United Arab Emirates; Brazil; Uruguay
+United Arab Emirates,Saudi Arabia; Pakistan; Israel; India
+Taiwan,Hong Kong; Vietnam; South Korea; Thailand
+Italy,Croatia; Austria; Switzerland; Serbia
+Uruguay,Argentina; Paraguay; Chile; Bolivia
+Russia,Pakistan; Nepal; Türkiye; United Arab Emirates
+Hong Kong,Taiwan; Vietnam; Thailand; South Korea
+Japan,South Korea; Taiwan; Hong Kong; Vietnam
+Romania,Serbia; Bulgaria; Hungary; Slovakia
+Costa Rica,Panama; Honduras; El Salvador; Guatemala
+Chile,Argentina; Uruguay; Paraguay; Bolivia
+Panama,Costa Rica; Honduras; El Salvador; Colombia
+Peru,Ecuador; Bolivia; Colombia; Venezuela
+Croatia,Italy; Austria; Hungary; Serbia
+Brazil,Paraguay; Bolivia; Uruguay; Peru
+India,Nepal; Bangladesh; Pakistan; United Arab Emirates
+Saudi Arabia,United Arab Emirates; Israel; Türkiye; Pakistan
+Hungary,Slovakia; Austria; Serbia; Croatia
+Argentina,Chile; Uruguay; Paraguay; Bolivia
+Venezuela,Trinidad & Tobago; Colombia; Puerto Rico; Panama
+Bangladesh,India; Nepal; Thailand; Vietnam
+Ecuador,Colombia; Peru; Panama; Costa Rica
+Pakistan,Nepal; United Arab Emirates; India; Bangladesh
+Honduras,El Salvador; Guatemala; Costa Rica; Panama
+Poland,Slovakia; Czechia; Hungary; Austria
+Colombia,Venezuela; Ecuador; Panama; Costa Rica
+Türkiye,Israel; Bulgaria; Greece; Ukraine
+Switzerland,Belgium; France; Austria; Netherlands
+Mexico,Guatemala; El Salvador; Honduras; United States
+Guatemala,El Salvador; Honduras; Costa Rica; Panama
+El Salvador,Honduras; Guatemala; Costa Rica; Panama
+Paraguay,Bolivia; Uruguay; Brazil; Argentina
+Bolivia,Paraguay; Brazil; Peru; Chile
+Austria,Czechia; Croatia; Hungary; Slovakia
+Czechia,Austria; Poland; Slovakia; Hungary
+Ukraine,Romania; Bulgaria; Serbia; Slovakia
+Slovakia,Hungary; Poland; Czechia; Austria
+Nepal,India; Bangladesh; Pakistan; United Arab Emirates
+Serbia,Romania; Hungary; Bulgaria; Croatia
+Trinidad & Tobago,Venezuela; Puerto Rico; Dominican Republic; Colombia
+Bulgaria,Romania; Serbia; Greece; Hungary

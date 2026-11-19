@@ -135,7 +135,10 @@ def methode_couleurs(dex):
         ("On a enlevé le contour noir du dessin",
          [html.P("Tous les dessins officiels ont un trait noir autour du Pokémon. Notre règle : la couleur la plus sombre "
                  "est un contour si elle est très sombre (L* < 15) et couvre au plus 15 % du corps. " + contour_txt),
-          barre_palette(d["final"], f"La palette finale : {d['importantes']} couleur(s) importante(s) (au moins 5 % du corps).")],
+          barre_palette(d["final"], f"La palette finale : {d['importantes']} couleur(s) importante(s) (au moins 5 % du corps)."),
+          html.P("Le tirage au hasard des 3 000 pixels n'est pas exactement le même que dans le notebook (là-bas on tire "
+                 "les Pokémon les uns après les autres), donc il peut y avoir une couleur d'écart avec la fiche au-dessus.",
+                 className="note")],
          "exploration"),
         ("Et on a fait ça pour les 1 025 Pokémon",
          "On compte les couleurs qui couvrent au moins 5 % du corps (à 2 % on comptait les yeux et les reflets, à 10 % on "

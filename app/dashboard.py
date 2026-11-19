@@ -1,15 +1,14 @@
 """Le Pokédex de Noël : dashboard Dash du projet « Qu'est-ce qui rend un Pokémon populaire ? ».
 
-Lancer depuis la racine du projet :
-    .venv/bin/python app/app.py
+En local, depuis la racine du projet :
+    .venv/bin/python app/dashboard.py
 puis ouvrir http://127.0.0.1:8050
+
+Sur Vercel : « Root Directory » = app, l'entrée est app/index.py (variable `app` = le serveur Flask de Dash).
 """
 import dash
 from dash import Dash, dcc, html
-from flask import abort, send_from_directory
-
 import theme  # noqa: F401  (enregistre le gabarit Plotly « noel »)
-from donnees import SPRITES
 
 app = Dash(
     __name__,
@@ -22,14 +21,6 @@ app = Dash(
     suppress_callback_exceptions=True,
 )
 server = app.server
-
-
-@server.route("/sprite/<int:dex>.png")
-def servir_sprite(dex):
-    """Images officielles (data/raw/sprites, non versionnées : relancer download_sprites.py)."""
-    if not 1 <= dex <= 1025:
-        abort(404)
-    return send_from_directory(SPRITES, f"{dex}.png", max_age=86400)
 
 
 # Ordre du menu : les pages de Luka puis celles de Lucas, puis Méthodes

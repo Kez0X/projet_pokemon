@@ -3,11 +3,10 @@ pour pouvoir les montrer dans le dashboard. Mêmes réglages que le notebook."""
 from functools import lru_cache
 
 import numpy as np
-from PIL import Image
 from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import silhouette_score
 
-from donnees import SPRITES
+from donnees import image_rgba
 
 SEUIL_ALPHA = 128
 N_PIXELS = 3000
@@ -20,7 +19,7 @@ SEUIL_IMPORTANTE = 0.05
 
 
 def pixels(dex):
-    arr = np.asarray(Image.open(SPRITES / f"{dex}.png").convert("RGBA")).reshape(-1, 4)
+    arr = np.asarray(image_rgba(dex)).reshape(-1, 4)
     vis = arr[arr[:, 3] >= SEUIL_ALPHA, :3]
     rng = np.random.default_rng(SEED)
     if len(vis) > N_PIXELS:

@@ -1,16 +1,21 @@
-"""Chargement des résultats des notebooks (data/processed/).
+"""Chargement des résultats des notebooks pour le dashboard.
 
-L'app ne lit que les petits fichiers exportés par les notebooks 01 à 08,
-jamais les données brutes (sauf les images officielles, servies telles quelles).
+L'app ne lit que les petits fichiers exportés par les notebooks 01 à 08, copiés dans app/data/
+par scripts/exporter_dashboard.py (app/data/ est versionné, pour pouvoir déployer l'app sur Vercel).
+Les images officielles sont chargées depuis le dépôt GitHub de PokéAPI (comme scripts/download_sprites.py).
 """
+import io
+import urllib.request
 from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
+from PIL import Image
 
-RACINE = Path(__file__).resolve().parent.parent
-PROCESSED = RACINE / "data" / "processed"
-SPRITES = RACINE / "data" / "raw" / "sprites" / "official_artwork"
+ICI = Path(__file__).resolve().parent
+PROCESSED = ICI / "data"
+SPRITES_LOCAUX = ICI.parent / "data" / "raw" / "sprites" / "official_artwork"
+URL_SPRITE = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{dex}.png"
 
 
 def _lire(nom):
@@ -76,5 +81,15 @@ def dex_vers_nom():
 
 
 def sprite(dex):
-    """URL de l'image officielle d'un Pokémon (servie par app.py)."""
-    return f"/sprite/{int(dex)}.png"
+    """URL de l'image officielle d'un Pokémon."""
+    return URL_SPRITE.format(dex=int(dex))
+
+
+@lru_cache(maxsize=128)
+def image_rgba(dex):
+    """L'image d'un Pokémon pour la démo du k-means : le fichier local s'il existe, sinon on la télécharge."""
+    local = SPRITES_LOCAUX / f"{int(dex)}.png"
+    if local.exists():
+        return Image.open(local).convert("RGBA")
+    with urllib.request.urlopen(URL_SPRITE.format(dex=int(dex)), timeout=20) as r:
+        return Image.open(io.BytesIO(r.read())).convert("RGBA")

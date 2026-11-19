@@ -1,0 +1,8 @@
+# Dépendances du dashboard seul (utilisées par Vercel, « Root Directory » = app)
+dash
+plotly
+pandas
+numpy
+scipy
+scikit-learn
+pillow
