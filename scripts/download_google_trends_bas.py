@@ -1,7 +1,7 @@
 """Deuxième collecte Google Trends : le bas du classement, avec une ancre faible.
 
 Dans la première collecte (download_google_trends.py), Gengar prend ~89 % de chaque lot :
-les Pokémon peu cherchés tombent à 0 ou à 1-2 points. Ici (voir la partie 10 du notebook 02) :
+les Pokémon peu cherchés tombent à 0 ou à 1-2 points. Ici (voir la partie 4 du notebook 02) :
 - chaque lot = Chuchmur (Whismur, ~0,023 × Gengar) + 4 Pokémon du bas ;
 - la liste des Pokémon vient de data/processed/trends_a_recollecter.csv (notebook 02) ;
 - 3 lots de liaison pour revenir à l'échelle de Gengar :
