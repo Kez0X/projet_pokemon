@@ -225,7 +225,8 @@ def bloc_reseau():
             ("On a comparé la popularité des familles",
              [html.P(f"Test de Kruskal-Wallis (la version sans hypothèse de normalité de l'ANOVA) : les familles n'ont pas "
                      f"la même popularité dans les sondages (p {_p(kw.get('johto', np.nan))} au Johto Times), "
-                     f"mais pas vraiment sur Google (p {_p(kw.get('trends', np.nan))}, juste au-dessus du seuil de 5 %)."),
+                     f"et un peu aussi sur Google (p {_p(kw.get('trends', np.nan))}), mais l'écart y est faible : il ne passe sous "
+                     "le seuil de 5 % que depuis la deuxième collecte, qui a précisé le bas du classement."),
               t.mini(f_cp, 340, "Popularité moyenne de chaque communauté, source par source.")],
              ["reseaux", "hors"]),
             ("Centralités et popularité",

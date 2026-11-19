@@ -13,7 +13,7 @@ dash.register_page(__name__, path="/carte", name="Le monde", order=7)
 # Nom des groupes de la CAH, repérés par un pays qui en fait partie (les numéros changent si on relance)
 GROUPES = [
     ("Mexico", "Amérique latine, Espagne, Italie", t.ROUGE),
-    ("France", "France, Suisse, Autriche", t.OR),
+    ("France", "Allemagne, France, Suisse, Autriche", t.OR),
     ("India", "Asie du Sud", t.SAPIN),
     (None, "Le reste du monde", t.GLACE),
 ]
@@ -86,6 +86,11 @@ def bloc_plus_cherche():
              "Google ne compare que 5 termes à la fois, et en valeurs relatives (dans chaque pays, les 5 se partagent 100). "
              "Du coup chaque requête contenait Ectoplasma (Gengar) plus 4 autres Pokémon : 256 requêtes pour couvrir les "
              "1 025. Ectoplasma sert de « mètre étalon » commun à toutes les requêtes.", "hors"),
+            ("On a refait une collecte pour le bas du classement",
+             "Ectoplasma prenait presque toute la requête, donc les Pokémon peu cherchés tombaient à 0. On a recollecté "
+             "les 645 Pokémon du bas avec une référence plus faible, Chuchmur, reliée à Ectoplasma en passant par Goupix "
+             "(Ectoplasma → Goupix → Chuchmur). Résultat : beaucoup moins de 0, et on a corrigé un biais : les Pokémon "
+             "rangés dans la même requête qu'une star (Pikachu, Dracaufeu…) étaient écrasés à 0.", "hors"),
             ("On a tout ramené sur l'échelle d'Ectoplasma",
              "Dans chaque pays, on divise la valeur de chaque Pokémon par celle d'Ectoplasma dans la même requête. Un "
              "ratio de 2 = deux fois plus cherché qu'Ectoplasma. C'est ce qu'on voit sur le graphique du haut.",
@@ -93,7 +98,7 @@ def bloc_plus_cherche():
             ("On a contrôlé la qualité des données",
              [html.P("Comme en cours, on a d'abord exploré : un pays a soit des valeurs pour toute la requête, soit que des 0 "
                      "(171 pays utilisables). Et comme Ectoplasma prend 89 % de chaque requête, les autres Pokémon n'ont que "
-                     "des petits entiers, avec beaucoup de 0 dans les petits pays. On garde les 67 pays qui ont moins de 25 % "
+                     "des petits entiers, avec beaucoup de 0 dans les petits pays (d'où la deuxième collecte). On garde les 67 pays qui ont moins de 25 % "
                      "de Pokémon à 0, sinon on ne peut plus les départager."),
               t.mini(f1, 220, "Les 171 pays selon leur part de Pokémon à 0, et notre seuil.")],
              "exploration"),
@@ -158,8 +163,8 @@ def bloc_groupes():
         "Chaque pays a-t-il son Pokémon préféré ?",
         ["Oui, et les goûts suivent la géographie. En regardant le Pokémon cherché ", html.Strong("plus là qu'ailleurs"),
          f", on trouve {p['favori_surrep'].nunique()} favoris différents dans les {len(p)} pays, et les pays se "
-         "regroupent en ", html.Strong("4 familles : l'Amérique latine (avec l'Espagne et l'Italie), France-Suisse-"
-                                       "Autriche, l'Asie du Sud, et le reste du monde"),
+         "regroupent en ", html.Strong("4 familles : l'Amérique latine (avec l'Espagne et l'Italie), Allemagne-France-"
+                                       "Suisse-Autriche, l'Asie du Sud, et le reste du monde"),
          ". Mais ces familles sont peu marquées : au fond, le monde aime à peu près les mêmes Pokémon."],
         html.Div(className="deux-colonnes", children=[
             t.graphe(fig, 440),
@@ -177,7 +182,7 @@ def bloc_groupes():
              "monde. Au début, les favoris étaient des Pokémon « fantômes », cherchés dans un seul pays, qui font exploser "
              "ce rapport. Du coup un favori doit être cherché dans au moins la moitié des pays.", "exploration"),
             ("On a retiré le goût commun avant de regrouper",
-             "Les pays se ressemblent énormément (Spearman médian de 0,88 entre deux pays). Si on regroupait directement, "
+             "Les pays se ressemblent énormément (Spearman médian de 0,91 entre deux pays). Si on regroupait directement, "
              "on ne verrait que ce fond commun. On retire donc à chaque Pokémon son percentile moyen sur les pays : il "
              "reste « plus ou moins cherché ici qu'ailleurs ». Chaque pays devient un vecteur de près de 1 000 Pokémon.",
              "exploration"),
@@ -186,15 +191,16 @@ def bloc_groupes():
              "elle vise le même but que le k-means (des groupes compacts), mais on voit sur le dendrogramme comment les "
              "groupes se forment.", "clustering"),
             ("On a choisi k avec la silhouette et le coude",
-             [html.P("La silhouette est faible partout (autour de 0,1) et l'inertie n'a pas de coude net. Comme on l'a vu en "
+             [html.P("La silhouette est faible partout (entre 0,10 et 0,18) et l'inertie n'a pas de coude net. Comme on l'a vu en "
                      "cours, quand les métriques ne tranchent pas, c'est qu'il n'y a pas de groupes très nets, et on choisit "
-                     "selon l'usage. Ici k = 4 est quand même le meilleur score pour les deux méthodes."),
+                     "selon l'usage. Ici k = 4 est le meilleur score pour la CAH, qu'on garde (pour le k-means, k = 3 est juste devant, "
+                     "0,165 contre 0,160)."),
               html.Div(className="deux-colonnes", style={"gridTemplateColumns": "1fr 1fr"}, children=[
                   t.mini(f1, 220, "Silhouette selon k."), t.mini(f2, 220, "Inertie du k-means selon k (coude)."),
               ])],
              "clustering"),
             ("On a comparé les deux méthodes et gardé la CAH",
-             "Le k-means et la CAH sont d'accord sur l'Amérique latine et sur France-Suisse-Autriche, mais coupent le reste "
+             "Le k-means et la CAH sont d'accord sur l'Amérique latine et sur Allemagne-France-Suisse-Autriche, mais coupent le reste "
              "autrement. On garde la CAH, plus facile à lire. Les groupes sont géographiques alors que le clustering ne "
              "connaît pas la position des pays : c'est rassurant.", "clustering"),
             ("On a dessiné la carte des goûts avec une MDS",
@@ -281,7 +287,7 @@ def bloc_voisins():
             ("On a défini les voisins",
              "Beaucoup de nos pays n'ont pas de frontière avec un autre pays gardé (Japon, Australie, Royaume-Uni…). Du "
              "coup on a pris les 4 pays les plus proches (distance entre les centres, contours Natural Earth). Par exemple "
-             "France → Belgique, Suisse, Pays-Bas, Royaume-Uni (choisis un pays dans le bloc d'au-dessus pour voir ses voisins).",
+             "France → Belgique, Suisse, Pays-Bas, Allemagne (choisis un pays dans le bloc d'au-dessus pour voir ses voisins).",
              "transfo"),
             ("On a tracé le diagramme de Moran",
              [html.P(f"Chaque point est un pays : sa valeur en x, la moyenne de ses 4 voisins en y (le « lag spatial »). "
