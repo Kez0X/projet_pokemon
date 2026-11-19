@@ -13,6 +13,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python scripts/download_community_days.py
 .venv/bin/python scripts/download_sorties.py
 .venv/bin/python scripts/download_naturalearth.py
+.venv/bin/python scripts/download_poty_2020.py           # résultats publiés du site officiel (versionnés)
 ```
 
 Les données ont été récupérées les **16 et 17/11/2026**. Toutes les données sont dans `data/raw/<source>/`. Celles qu'on ne peut pas retélécharger (Johto Times, Pokémon of the Year 2020, starters) sont versionnées ; les autres sont ignorées par Git et se retéléchargent avec les scripts.
@@ -103,13 +104,19 @@ Les données ont été récupérées les **16 et 17/11/2026**. Toutes les donné
   - Site officiel des résultats : https://pokemon2020.pokemon.com/en-us/
   - Fichier repris : dépôt `games_night_viz` de Will Sutton, https://github.com/wjsutton/games_night_viz/blob/main/challenges/1_player_select/pokemon_of_the_year_2020.xlsx
   - Présentation : https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_of_the_Year
-- **Comment** : fichier Excel téléchargé depuis le dépôt GitHub et ajouté tel quel au dépôt.
+- **Comment** :
+  - fichier Excel téléchargé depuis le dépôt GitHub et ajouté tel quel au dépôt ;
+  - les mêmes listes extraites du site officiel avec `scripts/download_poty_2020.py` : comme pour TheToyZone, il n'y a pas de fichier, les résultats sont écrits en dur dans le JavaScript du site (`bundle.js`). Cette version donne en plus **le numéro de Pokédex** et les noms en japonais, français et allemand.
 - **Contenu** (`data/raw/pokemon_of_the_year_2020/pokemon_of_the_year_2020.xlsx`) :
   - feuille `pokemon_of_the_year_2020` : 270 lignes, soit le top 30 de chacune des 8 régions de jeu (Kanto → Galar) et le top 30 général (`All`), avec les votes et le rang ;
   - feuille `pokemon_stats` : 1 032 Pokémon et formes avec leurs statistiques de jeu, repris du jeu de données Kaggle « All Pokémon dataset » (https://www.kaggle.com/maca11/all-pokemon-dataset).
+  - `poty_2020_officiel.csv` : les 270 lignes du site officiel (liste, rang, numéro de Pokédex, région, noms, votes).
+- **Vérification (19/11)** : les deux fichiers sont identiques sauf une ligne. Dans l'Excel, Rayquaza a 60 596 votes dans la liste de Hoenn, contre 60 939 sur le site officiel (dans les deux listes) : **on garde les valeurs du site officiel**. La jointure avec PokéAPI se fait par numéro de Pokédex (notebook 01).
+- **Dans la table maître** : `poty_votes`, `poty_rang_generation` et `poty_top30_mondial`, vides pour les 785 Pokémon non publiés (jamais 0). On ne calcule pas de rang mondial au-delà du top 30 : un Pokémon absent d'une liste régionale peut avoir plus de votes que le 30e d'une autre région.
 - **Limites** :
   - seuls les 30 premiers de chaque région sont publiés, donc uniquement des Pokémon déjà populaires ;
   - les régions sont celles des jeux (où le Pokémon apparaît), pas le pays des votants ;
+  - les listes ne suivent pas exactement les générations : Meltan et Melmetal (génération 7) sont dans la liste Galar. On garde la génération de PokéAPI, et on ne garde pas le rang dans la liste du site mais **le rang dans la génération**, recalculé à partir des votes (qui sont mondiaux). Ce rang est exact : dans chaque génération, tous les Pokémon publiés ont au moins autant de votes que le 30e de la liste de leur région, donc aucun Pokémon non publié ne peut passer devant (vérifié dans le notebook 01). La génération 7 a ainsi 32 Pokémon classés et la génération 8, 28 ;
   - Galar (génération 8) n'est pas dans le sondage Reddit 2019 : au plus 210 Pokémon en commun avec Reddit.
 
 ## 6. Johto Times / Dragonfly Cave 2025 (résultats préliminaires)
