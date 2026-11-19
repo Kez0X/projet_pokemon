@@ -1,0 +1,280 @@
+/* ===== Le Pokédex de Noël ===== */
+:root {
+  --nuit: #0d2235;
+  --nuit-2: #163a52;
+  --creme: #fffaf0;
+  --creme-2: #f6efe0;
+  --rouge: #c0392b;
+  --rouge-fonce: #8e2a20;
+  --or: #c8901a;
+  --or-clair: #f1c75b;
+  --sapin: #1f7a52;
+  --sapin-fonce: #145238;
+  --glace: #3a78b5;
+  --encre: #2b2620;
+  --encre-2: #5c554b;
+  --bord: #e3d9c4;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Nunito", system-ui, sans-serif;
+  color: var(--encre);
+  background:
+    radial-gradient(ellipse at 20% -10%, #24557a 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 10%, #1b4a5e 0%, transparent 45%),
+    linear-gradient(180deg, var(--nuit) 0%, var(--nuit-2) 70%, #1d4a5f 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* ----- Neige qui tombe (CSS seul, coupée si l'utilisateur réduit les animations) ----- */
+.neige, .neige-2 {
+  position: fixed; inset: -100px 0 0 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(3px 3px at 20px 30px, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 80px 120px, #fff 50%, transparent 51%),
+    radial-gradient(3px 3px at 150px 60px, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 210px 170px, #fff 50%, transparent 51%),
+    radial-gradient(4px 4px at 260px 20px, rgba(255,255,255,.9) 50%, transparent 51%),
+    radial-gradient(2px 2px at 330px 140px, #fff 50%, transparent 51%);
+  background-size: 360px 220px;
+  opacity: .55;
+  animation: tombe 14s linear infinite;
+}
+.neige-2 { background-size: 260px 300px; opacity: .35; animation-duration: 22s; filter: blur(1px); }
+@keyframes tombe { from { transform: translateY(0); } to { transform: translateY(220px); } }
+
+/* ----- En-tête : guirlande, marque, menu ----- */
+.haut { position: relative; z-index: 2; padding: 0 16px 8px; }
+.guirlande {
+  display: flex; justify-content: space-between; height: 34px; margin: 0 -16px;
+  padding: 0 12px;
+  background: radial-gradient(ellipse 50% 14px at 50% 0, transparent 92%, #2a4a32 94%, transparent 97%) 0 0 / 70px 20px repeat-x;
+}
+.ampoule {
+  width: 11px; height: 17px; border-radius: 50% 50% 45% 45%; margin-top: 10px;
+  position: relative; animation: brille 2.4s ease-in-out infinite;
+}
+.ampoule::before {
+  content: ""; position: absolute; top: -5px; left: 2px; width: 7px; height: 6px;
+  background: #3d4a40; border-radius: 2px;
+}
+.ampoule:nth-child(odd) { margin-top: 14px; }
+.a0 { background: #ff5a4e; --lueur: #ff5a4e; }
+.a1 { background: var(--or-clair); --lueur: #ffd76a; animation-delay: .6s; }
+.a2 { background: #4fd18b; --lueur: #4fd18b; animation-delay: 1.2s; }
+.a3 { background: #6fb6ff; --lueur: #6fb6ff; animation-delay: 1.8s; }
+@keyframes brille {
+  0%, 100% { box-shadow: 0 0 10px 3px var(--lueur); opacity: 1; }
+  50% { box-shadow: 0 0 2px 0 var(--lueur); opacity: .55; }
+}
+
+.marque { display: flex; align-items: center; gap: 14px; max-width: 1180px; margin: 6px auto 10px; }
+.marque-img { filter: drop-shadow(0 4px 8px rgba(0,0,0,.4)); }
+.marque-titre {
+  font-family: "Mountains of Christmas", cursive; font-size: 40px; line-height: 1;
+  color: #fff; text-shadow: 0 2px 0 var(--rouge-fonce), 0 0 18px rgba(255,215,106,.35);
+}
+.marque-sous { color: #cfe3f2; font-size: 15px; margin-top: 4px; }
+
+.menu { display: flex; flex-wrap: wrap; gap: 8px; max-width: 1180px; margin: 0 auto; }
+.boule {
+  text-decoration: none; color: #fff; font-weight: 700; font-size: 14px;
+  padding: 7px 14px; border-radius: 999px;
+  background: linear-gradient(160deg, rgba(255,255,255,.18), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.25);
+  transition: background .15s, transform .15s;
+}
+.boule:hover, .boule:focus-visible { background: var(--rouge); transform: translateY(-2px); outline: none; }
+
+/* ----- Contenu ----- */
+.contenu-page { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 8px 16px 40px; }
+
+.entete-page {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  color: #fff; margin: 18px 0 14px;
+}
+.entete-page h1 {
+  font-family: "Mountains of Christmas", cursive; font-size: 46px; margin: 0;
+  text-shadow: 0 2px 0 var(--rouge-fonce);
+}
+.sous-titre { color: #cfe3f2; margin: 6px 0 0; font-size: 17px; max-width: 760px; }
+.mascotte { filter: drop-shadow(0 6px 12px rgba(0,0,0,.45)); animation: flotte 4s ease-in-out infinite; }
+@keyframes flotte { 50% { transform: translateY(-8px) rotate(-3deg); } }
+
+/* Carte « question » : un paquet cadeau crème avec un ruban */
+.carte-question {
+  position: relative; background: var(--creme); border-radius: 18px;
+  padding: 26px 26px 18px; margin: 0 0 22px; overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,.28), inset 0 0 0 1px var(--bord);
+}
+.ruban {
+  position: absolute; top: 0; left: 0; right: 0; height: 8px;
+  background: repeating-linear-gradient(135deg, var(--rouge) 0 14px, #fff 14px 20px, var(--sapin) 20px 34px, #fff 34px 40px);
+}
+.question { margin: 4px 0 6px; font-size: 22px; color: var(--sapin-fonce); }
+.reponse { margin: 0 0 14px; font-size: 17px; line-height: 1.5; color: var(--encre); max-width: 900px; }
+.reponse strong { color: var(--rouge-fonce); }
+.contenu { margin-top: 4px; }
+
+.methode { margin-top: 12px; border-top: 1px dashed var(--bord); padding-top: 10px; }
+.methode summary {
+  cursor: pointer; font-weight: 800; color: var(--rouge); list-style: none; display: inline-block;
+  padding: 4px 10px; border-radius: 8px;
+}
+.methode summary::-webkit-details-marker { display: none; }
+.methode summary:hover { background: #fbe7e3; }
+.methode-texte { color: var(--encre-2); font-size: 15px; line-height: 1.55; padding: 6px 10px 2px; }
+.methode-texte ul { margin: 4px 0; padding-left: 20px; }
+
+/* Tuiles chiffres */
+.tuiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 22px; }
+.tuile {
+  background: var(--creme); border-radius: 14px; padding: 16px 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.22); border-top: 5px solid var(--or);
+}
+.tuile:nth-child(2) { border-top-color: var(--rouge); }
+.tuile:nth-child(3) { border-top-color: var(--sapin); }
+.tuile:nth-child(4) { border-top-color: var(--glace); }
+.tuile-valeur { font-size: 34px; font-weight: 800; color: var(--encre); line-height: 1.1; }
+.tuile-legende { color: var(--encre-2); font-size: 14px; margin-top: 4px; }
+
+/* Galerie de Pokémon */
+.galerie { display: flex; flex-wrap: wrap; gap: 10px; }
+.galerie-item {
+  width: 112px; text-align: center; padding: 8px 4px 10px; border-radius: 14px;
+  background: var(--creme-2); box-shadow: inset 0 0 0 1px var(--bord);
+}
+.galerie-item .sprite { display: block; margin: 0 auto; }
+.galerie-nom { font-weight: 800; font-size: 13px; margin-top: 4px; }
+.galerie-legende { font-size: 12px; color: var(--encre-2); }
+
+.deux-colonnes { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; align-items: start; }
+@media (max-width: 860px) { .deux-colonnes { grid-template-columns: 1fr; } }
+
+.fiche {
+  background: var(--creme-2); border-radius: 14px; padding: 14px; text-align: center;
+  box-shadow: inset 0 0 0 1px var(--bord); min-height: 200px;
+}
+.fiche h3 { margin: 6px 0 2px; color: var(--sapin-fonce); }
+.fiche p { margin: 4px 0; font-size: 14px; color: var(--encre-2); }
+.etiquette {
+  display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700;
+  background: #fbe7e3; color: var(--rouge-fonce); margin: 2px;
+}
+.etiquette.vert { background: #e1f1e8; color: var(--sapin-fonce); }
+.etiquette.gris { background: #eee9de; color: var(--encre-2); }
+
+.palette { display: flex; height: 22px; border-radius: 6px; overflow: hidden; margin: 8px auto; max-width: 220px; }
+
+.controle { margin-bottom: 10px; max-width: 360px; }
+.controle label { font-weight: 700; font-size: 14px; display: block; margin-bottom: 4px; color: var(--encre-2); }
+.note { font-size: 13px; color: var(--encre-2); margin: 6px 0 0; }
+
+/* ----- Calendrier de l'Avent (accueil) ----- */
+.calendrier { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+.case {
+  perspective: 900px; height: 230px; text-decoration: none; color: inherit; display: block;
+}
+.case-interieur {
+  position: relative; width: 100%; height: 100%; transition: transform .6s; transform-style: preserve-3d;
+}
+.case:hover .case-interieur, .case:focus-visible .case-interieur { transform: rotateY(180deg); }
+.case-face, .case-dos {
+  position: absolute; inset: 0; backface-visibility: hidden; border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.3);
+}
+.case-face {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: #fff; border: 2px dashed rgba(255,255,255,.45);
+}
+.case:nth-child(4n+1) .case-face { background: linear-gradient(150deg, #d24a3b, var(--rouge-fonce)); }
+.case:nth-child(4n+2) .case-face { background: linear-gradient(150deg, #2a9a68, var(--sapin-fonce)); }
+.case:nth-child(4n+3) .case-face { background: linear-gradient(150deg, #4a8cc9, #24527d); }
+.case:nth-child(4n+4) .case-face { background: linear-gradient(150deg, #d9a43a, #96650c); }
+.case-num { font-family: "Mountains of Christmas", cursive; font-size: 64px; line-height: 1; text-shadow: 0 2px 0 rgba(0,0,0,.25); }
+.case-indice { font-size: 13px; opacity: .9; margin-top: 6px; padding: 0 10px; text-align: center; }
+.case-dos {
+  transform: rotateY(180deg); background: var(--creme); padding: 12px 14px; display: flex; flex-direction: column;
+  align-items: center; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,.3), inset 0 0 0 1px var(--bord);
+}
+.case-dos .sprite { margin-top: -2px; }
+.case-dos p { margin: 4px 0 0; font-size: 14px; line-height: 1.35; }
+.case-dos .case-lien { margin-top: auto; font-size: 12px; font-weight: 800; color: var(--rouge); }
+
+.intro { color: #e6f0f7; font-size: 17px; line-height: 1.6; max-width: 880px; margin: 0 0 20px; }
+.intro strong { color: #fff; }
+.titre-section {
+  font-family: "Mountains of Christmas", cursive; color: #fff; font-size: 34px; margin: 26px 0 12px;
+  text-shadow: 0 2px 0 var(--rouge-fonce);
+}
+
+/* Cadeau pas encore déballé */
+.cadeau-ferme { text-align: center; }
+.cadeau-ferme ul { display: inline-block; text-align: left; }
+.gros-cadeau { font-size: 72px; animation: secoue 3s ease-in-out infinite; display: inline-block; }
+@keyframes secoue { 0%, 80%, 100% { transform: rotate(0); } 85% { transform: rotate(-8deg); } 90% { transform: rotate(8deg); } 95% { transform: rotate(-4deg); } }
+
+.tableau { width: 100%; border-collapse: collapse; font-size: 15px; }
+.tableau th { text-align: left; color: var(--sapin-fonce); border-bottom: 2px solid var(--bord); padding: 8px 6px; }
+.tableau td { border-bottom: 1px solid var(--bord); padding: 8px 6px; vertical-align: top; }
+
+.bas { position: relative; z-index: 1; text-align: center; color: #a9c3d6; font-size: 13px; padding: 20px 16px 30px; }
+
+@media (max-width: 600px) {
+  .marque-titre { font-size: 30px; }
+  .entete-page h1 { font-size: 34px; }
+  .mascotte { width: 84px; height: 84px; }
+  .carte-question { padding: 22px 16px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neige, .neige-2, .ampoule, .mascotte, .gros-cadeau { animation: none; }
+  .case-interieur { transition: none; }
+}
+
+.legende-maison { font-size: 14px; color: var(--encre-2); margin-bottom: 4px; }
+
+/* Méthode détaillée en étapes */
+.etapes { list-style: none; counter-reset: etape; padding: 0; margin: 6px 0 0; }
+.etape { counter-increment: etape; position: relative; padding: 0 0 12px 40px; }
+.etape::before {
+  content: counter(etape); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--sapin); color: #fff; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center;
+}
+.etape:not(:last-child)::after {
+  content: ""; position: absolute; left: 12px; top: 28px; bottom: 2px; border-left: 2px dotted var(--bord);
+}
+.etape-tete { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--encre); margin-bottom: 2px; }
+.etape-texte { color: var(--encre-2); }
+.etape-texte p { margin: 2px 0 4px; }
+.etape-texte ul { margin: 2px 0 4px; }
+.tag-cours { font-size: 11.5px; font-weight: 800; padding: 1px 8px; border-radius: 999px; letter-spacing: .2px; }
+.cours-exploration { background: #e1ecf6; color: #24527d; }
+.cours-clustering { background: #fbe7e3; color: var(--rouge-fonce); }
+.cours-reseaux { background: #e1f1e8; color: var(--sapin-fonce); }
+.cours-transfo { background: #f8eccf; color: #7a5208; }
+.cours-hors { background: #eee9de; color: var(--encre-2); }
+.attention { margin-top: 4px; padding: 8px 12px; border-radius: 10px; background: #fdf3e1; color: var(--encre-2); font-size: 14.5px; }
+
+.mini { margin: 6px 0 10px; background: #fffdf8; border: 1px solid var(--bord); border-radius: 10px; padding: 6px 8px 4px; }
+.mini-legende { font-size: 13px; color: var(--encre-2); padding: 2px 4px 4px; font-style: italic; }
+.code-etudiant { font-family: ui-monospace, monospace; font-size: 13px; background: #f3eee2; border-radius: 6px; padding: 1px 6px; }
+
+.tuiles-kana { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin: 6px 0; }
+.kana { font-size: 22px; min-width: 38px; padding: 4px 6px; border-radius: 8px; background: #eee9de; color: var(--encre); text-align: center; }
+.kana.voisee { background: var(--rouge); color: #fff; }
+
+.pop-bloc { background: #fffdf8; border: 1px solid var(--bord); border-radius: 10px; padding: 8px 10px; margin: 8px 0; text-align: left; }
+.pop-titre { font-weight: 800; font-size: 13px; color: var(--sapin-fonce); margin-bottom: 4px; }
+.pop-ligne { display: flex; align-items: center; gap: 8px; font-size: 13px; margin: 3px 0; }
+.pop-nom { width: 82px; color: var(--encre-2); }
+.pop-barre { flex: 1; height: 10px; background: #eee9de; border-radius: 999px; overflow: hidden; }
+.pop-barre > div { height: 100%; background: var(--sapin); border-radius: 999px; }
+.pop-val { width: 28px; text-align: right; font-weight: 800; }
+.pop-vide { color: var(--encre-2); font-style: italic; }
+.radio-noel label { margin-right: 14px; font-size: 14px; }
+.radio-noel input { margin-right: 4px; accent-color: var(--rouge); }
