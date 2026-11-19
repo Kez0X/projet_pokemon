@@ -57,37 +57,37 @@ johto,type Psy,0.0393,0.3047
 johto,type Roche,-0.0334,0.4213
 johto,type Acier,-0.0254,0.5859
 johto,type Eau,-0.0282,0.3937
-trends,constante,0.708,0.0
-trends,génération 2,-0.1621,0.0
-trends,génération 3,-0.2246,0.0
-trends,génération 4,-0.2055,0.0
-trends,génération 5,-0.3632,0.0
-trends,génération 6,-0.2767,0.0
-trends,génération 7,-0.3214,0.0
-trends,génération 8,-0.3945,0.0
-trends,génération 9,-0.437,0.0
-trends,sans évolution,-0.0023,0.9199
-trends,stade 2,-0.0823,0.0
-trends,stade 3,0.0803,0.0027
-trends,starter stade 1,0.3324,0.0
-trends,starter stade 2,-0.14,0.0001
-trends,starter stade 3,0.2457,0.0
-trends,légendaire,0.2107,0.0
-trends,fabuleux,0.2821,0.0
-trends,type Insecte,-0.0443,0.161
-trends,type Ténèbres,0.1108,0.0197
-trends,type Dragon,0.2452,0.0
-trends,type Électrik,0.1206,0.0002
-trends,type Fée,0.0872,0.0938
-trends,type Combat,0.1036,0.006
-trends,type Feu,0.0918,0.0065
-trends,type Vol,0.181,0.0136
-trends,type Spectre,0.1064,0.0128
-trends,type Plante,-0.0208,0.4769
-trends,type Sol,0.0388,0.3525
-trends,type Glace,-0.0125,0.7964
+trends,constante,0.718,0.0
+trends,génération 2,-0.1784,0.0
+trends,génération 3,-0.2421,0.0
+trends,génération 4,-0.2223,0.0
+trends,génération 5,-0.3822,0.0
+trends,génération 6,-0.2948,0.0
+trends,génération 7,-0.3411,0.0
+trends,génération 8,-0.4142,0.0
+trends,génération 9,-0.4519,0.0
+trends,sans évolution,-0.0017,0.9401
+trends,stade 2,-0.0832,0.0
+trends,stade 3,0.0816,0.0025
+trends,starter stade 1,0.3321,0.0
+trends,starter stade 2,-0.1395,0.0001
+trends,starter stade 3,0.2448,0.0
+trends,légendaire,0.2135,0.0
+trends,fabuleux,0.2944,0.0
+trends,type Insecte,-0.0451,0.1597
+trends,type Ténèbres,0.1158,0.0164
+trends,type Dragon,0.2466,0.0
+trends,type Électrik,0.1237,0.0002
+trends,type Fée,0.0883,0.1019
+trends,type Combat,0.1022,0.0075
+trends,type Feu,0.0935,0.0053
+trends,type Vol,0.1845,0.0137
+trends,type Spectre,0.1053,0.0164
+trends,type Plante,-0.0178,0.5485
+trends,type Sol,0.061,0.0991
+trends,type Glace,-0.01,0.8408
 trends,type Poison,-0.0004,0.993
-trends,type Psy,0.0414,0.2777
-trends,type Roche,0.0175,0.5913
-trends,type Acier,0.1009,0.0273
-trends,type Eau,-0.0112,0.6796
+trends,type Psy,0.0462,0.2305
+trends,type Roche,0.0226,0.4948
+trends,type Acier,0.1156,0.0081
+trends,type Eau,-0.0046,0.8647
