@@ -16,7 +16,7 @@ CASES = [
     ("Le starter du milieu", 5,
      "On aime Salamèche et Dracaufeu… mais pas Reptincel.", "/sur-sous-cotes"),
     ("De plus en plus colorés", 6,
-     "Les Pokémon récents ont plus de couleurs : 2,6 en gén. 1 contre 3,7 en gén. 9.", "/conception"),
+     "Les Pokémon récents ont plus de couleurs : 2,7 en gén. 1 contre 3,7 en gén. 9.", "/conception"),
     ("Design ou nostalgie ?", 460,
      "Le design a changé, mais il n'explique pas pourquoi les récents sont moins aimés.", "/conception"),
     ("Un nom qui pèse lourd", 143,

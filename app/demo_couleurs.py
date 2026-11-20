@@ -5,6 +5,7 @@ from functools import lru_cache
 import numpy as np
 from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import silhouette_score
+from scipy import ndimage
 
 from donnees import image_rgba
 
@@ -13,18 +14,32 @@ N_PIXELS = 3000
 SEED = 0
 K = 8
 FUSION_DELTA_E = 25
-L_CONTOUR = 15
-PART_CONTOUR = 0.15
+L_CONTOUR = 15          # pixel très sombre
+RAYON_OUVERTURE = 3     # ouverture morphologique : les traits plus fins disparaissent
+L_FRANGE = 30           # bord adouci du trait
 SEUIL_IMPORTANTE = 0.05
 
 
+def masques(dex):
+    """Comme le notebook 03 : le contour (trait fin + bord adouci) et le noir « plein » (gardé)."""
+    arr = np.asarray(image_rgba(dex))
+    vis = arr[..., 3] >= SEUIL_ALPHA
+    L = rgb_vers_lab(arr[..., :3])[..., 0]
+    sombre = vis & (L < L_CONTOUR)
+    st = ndimage.iterate_structure(ndimage.generate_binary_structure(2, 1), RAYON_OUVERTURE)
+    plein = ndimage.binary_opening(sombre, structure=st)
+    trait = sombre & ~plein
+    trait = trait | (ndimage.binary_dilation(trait) & vis & (L < L_FRANGE) & ~plein)
+    return arr, vis, trait, plein
+
+
 def pixels(dex):
-    arr = np.asarray(image_rgba(dex)).reshape(-1, 4)
-    vis = arr[arr[:, 3] >= SEUIL_ALPHA, :3]
-    rng = np.random.default_rng([SEED, dex])   # même tirage que le notebook 03 (un générateur par Pokémon)
-    if len(vis) > N_PIXELS:
-        vis = vis[rng.choice(len(vis), N_PIXELS, replace=False)]
-    return vis.astype(float)
+    """Les pixels visibles sans le contour, 3 000 tirés au hasard (même tirage que le notebook 03)."""
+    arr, vis, trait, _ = masques(dex)
+    X = arr[..., :3][vis & ~trait].astype(float)
+    if len(X) > N_PIXELS:
+        X = X[np.random.default_rng([SEED, dex]).choice(len(X), N_PIXELS, replace=False)]
+    return X
 
 
 def rgb_vers_lab(rgb):
@@ -42,6 +57,12 @@ def hexa(c):
 
 @lru_cache(maxsize=64)
 def demo(dex):
+    # 0) le contour, enlevé de l'image avant le k-means
+    arr, vis, trait, plein = masques(dex)
+    image = np.full(vis.shape + (3,), 255, np.uint8)
+    image[vis] = (225, 225, 225)
+    image[trait] = (230, 90, 90)
+    image[plein] = (0, 0, 0)
     X = pixels(dex)
     # 1) coude et silhouette pour k = 2 à 12 (silhouette sur 1 000 pixels pour aller plus vite)
     sous = X[np.random.default_rng(SEED).choice(len(X), min(1000, len(X)), replace=False)]
@@ -62,18 +83,10 @@ def demo(dex):
         m = groupes == g
         fus.append(((centres[m] * parts[m, None]).sum(0) / parts[m].sum(), parts[m].sum()))
     fus.sort(key=lambda x: -x[1])
-    # 4) contour : la couleur la plus sombre, si L* < 15 et part <= 15 %
-    L = rgb_vers_lab(np.array([c for c, _ in fus]))[:, 0]
-    i = int(np.argmin(L))
-    contour = bool(L[i] < L_CONTOUR and fus[i][1] <= PART_CONTOUR)
-    sans = [f for j, f in enumerate(fus) if not (contour and j == i)]
-    total = sum(p for _, p in sans)
-    sans = [(c, p / total) for c, p in sans]
+    final = [(hexa(c), p) for c, p in fus]
     return {
+        "image": image[::2, ::2], "part_contour": float(trait.sum() / vis.sum()), "part_noir": float(plein.sum() / vis.sum()),
         "pixels": X, "ks": ks, "inerties": inerties, "silhouettes": silhouettes,
-        "brut": brut,
-        "fusion": [(hexa(c), p) for c, p in fus],
-        "contour": contour, "contour_L": float(L[i]), "contour_part": float(fus[i][1]),
-        "final": [(hexa(c), p) for c, p in sans],
-        "importantes": sum(p >= SEUIL_IMPORTANTE for _, p in sans),
+        "brut": brut, "fusion": final, "final": final,
+        "importantes": sum(p >= SEUIL_IMPORTANTE for _, p in final),
     }

@@ -101,15 +101,24 @@ def methode_couleurs(dex):
     f_i.update_xaxes(title="k", dtick=1)
     f_i.update_yaxes(title="inertie")
     k_best = d["ks"][max(range(len(d["ks"])), key=lambda i: d["silhouettes"][i])]
-    contour_txt = (f"Ici, la couleur la plus sombre a un L* de {d['contour_L']:.0f} et couvre "
-                   f"{d['contour_part'] * 100:.0f} % du corps : "
-                   + ("c'est le contour du dessin, on l'enlève." if d["contour"] else
-                      "elle ne remplit pas les deux conditions, c'est une vraie couleur du Pokémon, on la garde."))
+    f_contour = go.Figure(go.Image(z=d["image"], hoverinfo="skip"))
+    f_contour.update_xaxes(visible=False)
+    f_contour.update_yaxes(visible=False)
+    f_contour.update_layout(margin=dict(l=0, r=0, t=0, b=0))
     return t.etapes([
+        ("On a enlevé le contour noir du dessin",
+         [html.P("Tous les dessins officiels ont un trait noir autour du Pokémon et de ses détails : ce n'est pas une couleur "
+                 "du Pokémon. Mais certaines zones noires en sont une (le bout des oreilles de Pikachu, des yeux…). Ce qui "
+                 "les distingue, c'est la forme : le contour est un trait fin. On repère les pixels très sombres (L* < 15), "
+                 "puis une ouverture morphologique (on érode puis on dilate ce masque) efface les traits fins et garde les "
+                 f"taches pleines. On enlève aussi le bord adouci du trait. Pour {nom}, le contour couvre "
+                 f"{d['part_contour'] * 100:.0f} % du corps, et le noir gardé {d['part_noir'] * 100:.0f} %."),
+          t.mini(f_contour, 300, f"{nom} : en rouge le contour (enlevé), en noir le noir « plein » (gardé).")],
+         "hors"),
         ("On a pris les pixels de l'image",
          [html.P(f"L'image de {nom} fait 475 × 475 pixels avec un fond transparent. On ne garde que les pixels opaques "
-                 "(alpha ≥ 128), puis on en tire 3 000 au hasard. Chaque pixel devient un point dans l'espace (rouge, vert, "
-                 "bleu) : c'est ce nuage qu'on va découper en groupes."),
+                 "(alpha ≥ 128) qui ne sont pas du contour, puis on en tire 3 000 au hasard. Chaque pixel devient un point "
+                 "dans l'espace (rouge, vert, bleu) : c'est ce nuage qu'on va découper en groupes."),
           t.mini(f_pix, 320, f"Les 3 000 pixels de {nom}, chacun à sa place dans l'espace des couleurs (tu peux le tourner).")],
          "exploration"),
         ("On a cherché le bon k avec la silhouette et le coude",
@@ -130,22 +139,17 @@ def methode_couleurs(dex):
          [html.P("On regroupe les 8 centres avec une classification hiérarchique (lien moyen), coupée quand deux couleurs "
                  "sont à plus de 25 dans l'espace Lab. On passe par Lab parce que la distance y correspond à ce que voit "
                  "l'œil (on a testé 15, 25 et 35 sur des exemples)."),
-          barre_palette(d["fusion"], f"Après la fusion : {len(d['fusion'])} couleurs.")],
-         ["clustering", "hors"]),
-        ("On a enlevé le contour noir du dessin",
-         [html.P("Tous les dessins officiels ont un trait noir autour du Pokémon. Notre règle : la couleur la plus sombre "
-                 "est un contour si elle est très sombre (L* < 15) et couvre au plus 15 % du corps. " + contour_txt),
           barre_palette(d["final"], f"La palette finale : {d['importantes']} couleur(s) importante(s) (au moins 5 % du corps)."),
           html.P("Le tirage au hasard des 3 000 pixels est le même que dans le notebook (chaque Pokémon a son propre "
                  "tirage) : la palette est exactement celle de la fiche au-dessus.",
                  className="note")],
-         "exploration"),
+         ["clustering", "hors"]),
         ("Et on a fait ça pour les 1 025 Pokémon",
          "On compte les couleurs qui couvrent au moins 5 % du corps (à 2 % on comptait les yeux et les reflets, à 10 % on "
          "perdait des couleurs bien visibles), puis on fait la moyenne par génération : c'est le graphique du haut.",
          "exploration"),
-    ], attention="les seuils (Lab, contour, 5 %) sont choisis à l'œil sur des exemples. Quelques Pokémon noirs proches "
-                 "du seuil de 15 % (Malosse, Démolosse) peuvent changer de côté selon les pixels tirés.")
+    ], attention="les seuils (Lab, contour, 5 %) sont choisis à l'œil sur des exemples, et les détails noirs très fins "
+                 "(rayures, moustaches) partent avec le contour, puisqu'on ne peut pas les distinguer d'un trait.")
 
 
 # ---------- 2. Design ou nostalgie ----------
