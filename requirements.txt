@@ -1,3 +1,6 @@
+# En plus de ces paquets Python, le notebook 04 a besoin du programme espeak-ng
+# (transcription phonétique des noms), qui ne s'installe pas avec pip :
+#   sudo apt install espeak-ng
 pandas
 requests
 openpyxl
