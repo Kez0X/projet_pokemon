@@ -14,6 +14,12 @@ from donnees import noms, popularite, table_maitre
 dash.register_page(__name__, path="/noms", name="Les noms", order=4)
 
 PETITS = set("ャュョァィゥェォヮ")
+PETITES_VOYELLES = set("ァィゥェォ")
+
+
+def _voyelle(kana):
+    nom = unicodedata.name(kana, "")
+    return nom[-1] if nom.startswith("KATAKANA LETTER") and nom[-1] in "AIUEO" else None
 
 
 def _donnees():
@@ -30,10 +36,10 @@ def mores(nom_ja):
         if not ("゠" <= ch <= "ヿ"):
             continue
         voisee = "゙" in unicodedata.normalize("NFD", ch)
-        if ch in PETITS and out:
+        if ch in PETITS and out and not (ch in PETITES_VOYELLES and _voyelle(out[-1][0][-1]) == _voyelle(ch)):
             texte, v = out[-1]
-            out[-1] = (texte + ch, v)
-        else:
+            out[-1] = (texte + ch, v)   # petit kana prononcé avec le kana d'avant (キャ = « kya »)
+        else:                           # sinon une more à part (dont ピィ = « pii » : la voyelle est allongée)
             out.append((ch, voisee))
     return out
 
