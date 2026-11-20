@@ -3,6 +3,7 @@
 Ce document liste les sources du projet et explique comment on a récupéré chaque jeu de données. Les données brutes ne sont pas versionnées (`data/raw/` est dans le `.gitignore`) : pour les obtenir, il suffit de relancer les scripts de `scripts/`.
 
 ```bash
+sudo apt install espeak-ng                             # transcription phonétique des noms (notebook 04)
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python scripts/download_pokeapi.py           # à lancer en premier : noms et identifiants servent de clé
 .venv/bin/python scripts/download_sprites.py           # ~130 Mo d'images
