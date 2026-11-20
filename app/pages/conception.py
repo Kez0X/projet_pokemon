@@ -136,16 +136,16 @@ def methode_couleurs(dex):
          [html.P("Tous les dessins officiels ont un trait noir autour du Pokémon. Notre règle : la couleur la plus sombre "
                  "est un contour si elle est très sombre (L* < 15) et couvre au plus 15 % du corps. " + contour_txt),
           barre_palette(d["final"], f"La palette finale : {d['importantes']} couleur(s) importante(s) (au moins 5 % du corps)."),
-          html.P("Le tirage au hasard des 3 000 pixels n'est pas exactement le même que dans le notebook (là-bas on tire "
-                 "les Pokémon les uns après les autres), donc il peut y avoir une couleur d'écart avec la fiche au-dessus.",
+          html.P("Le tirage au hasard des 3 000 pixels est le même que dans le notebook (chaque Pokémon a son propre "
+                 "tirage) : la palette est exactement celle de la fiche au-dessus.",
                  className="note")],
          "exploration"),
         ("Et on a fait ça pour les 1 025 Pokémon",
          "On compte les couleurs qui couvrent au moins 5 % du corps (à 2 % on comptait les yeux et les reflets, à 10 % on "
          "perdait des couleurs bien visibles), puis on fait la moyenne par génération : c'est le graphique du haut.",
          "exploration"),
-    ], attention="les seuils (Lab, contour, 5 %) sont choisis à l'œil sur des exemples. Malosse perd son pelage noir "
-                 "par erreur, juste sous le seuil de 15 %.")
+    ], attention="les seuils (Lab, contour, 5 %) sont choisis à l'œil sur des exemples. Quelques Pokémon noirs proches "
+                 "du seuil de 15 % (Malosse, Démolosse) peuvent changer de côté selon les pixels tirés.")
 
 
 # ---------- 2. Design ou nostalgie ----------

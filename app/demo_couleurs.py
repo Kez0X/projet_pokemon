@@ -21,7 +21,7 @@ SEUIL_IMPORTANTE = 0.05
 def pixels(dex):
     arr = np.asarray(image_rgba(dex)).reshape(-1, 4)
     vis = arr[arr[:, 3] >= SEUIL_ALPHA, :3]
-    rng = np.random.default_rng(SEED)
+    rng = np.random.default_rng([SEED, dex])   # même tirage que le notebook 03 (un générateur par Pokémon)
     if len(vis) > N_PIXELS:
         vis = vis[rng.choice(len(vis), N_PIXELS, replace=False)]
     return vis.astype(float)
