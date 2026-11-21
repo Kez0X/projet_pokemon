@@ -21,14 +21,17 @@ METHODES = [
      "Le réseau, Le monde"),
     ("Statistique spatiale", "Indice de Moran et LISA",
      "Le monde"),
+    ("Tests (hors cours)", "Transcription phonétique (espeak-ng), test du signe sur les lignées d'évolution, "
+     "Mann-Whitney, correction de Holm pour les tests multiples",
+     "Les noms"),
 ]
 
 SOURCES = [
-    ("PokéAPI", "Attributs, noms français et japonais, illustrations officielles"),
+    ("PokéAPI", "Attributs, noms français, anglais et japonais, lignées d'évolution, illustrations officielles"),
     ("Sondage Reddit r/pokemon 2019", "52 836 votes, générations 1 à 7"),
     ("Johto Times / Dragonfly Cave 2025", "Votes par génération, relevés dans la vidéo des résultats"),
     ("Google Trends", "Intérêt par pays, 2021-2026, chaque Pokémon ramené à Ectoplasma (Gengar) ; 28 noms qui sont aussi des mots retirés"),
-    ("Pokémon of the Year 2020", "Top 30 par région (en cours d'intégration)"),
+    ("Pokémon of the Year 2020", "Top 30 par région, plus de 6,6 millions de votes"),
     ("TheToyZone 2024", "Pokémon favori par pays et génération (pour comparer)"),
     ("Natural Earth", "Contours et voisinages des pays"),
 ]

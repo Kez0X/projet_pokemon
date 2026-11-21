@@ -1,0 +1,7 @@
+langue,variable,évolution a plus,évolution a moins,égal,part de plus (hors égalités),p_valeur
+japonais,ja_mores,248,27,209,0.9,6.6e-46
+japonais,ja_voisees,167,68,249,0.71,8.6e-11
+français,fr_syllabes,133,67,284,0.67,3.5e-06
+français,fr_voisees,147,112,225,0.57,3.4e-02
+anglais,en_syllabes,188,61,235,0.76,3.1e-16
+anglais,en_voisees,153,103,228,0.6,2.1e-03
