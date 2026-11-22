@@ -12,7 +12,7 @@ CASES = [
     ("Les anciens ou les nouveaux ?", 1,
      "La génération est l'effet le plus fort : on aime les Pokémon de son enfance.", "/sur-sous-cotes"),
     ("Plus aimés que prévu", 197,
-     "Les évolutions d'Évoli, Lucario, Zorua… sont sur-cotés dans les trois sources.", "/sur-sous-cotes"),
+     "Zorua, Lucario, Rocabot, des évolutions d'Évoli… sont sur-cotés dans toutes les sources.", "/sur-sous-cotes"),
     ("Le starter du milieu", 5,
      "On aime Salamèche et Dracaufeu… mais pas Reptincel.", "/sur-sous-cotes"),
     ("De plus en plus colorés", 6,

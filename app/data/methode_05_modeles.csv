@@ -1,7 +1,14 @@
 source,modele,n,r2_ajuste
 reddit,un bonus starter,809,0.356
 reddit,bonus starter par stade,809,0.385
+reddit,+ milieu ou forme finale,809,0.449
+reddit,modèle final (+ les deux types),809,0.448
 johto,un bonus starter,1025,0.239
 johto,bonus starter par stade,1025,0.286
+johto,+ milieu ou forme finale,1025,0.372
+johto,modèle final (+ les deux types),1025,0.378
 trends,un bonus starter,997,0.389
 trends,bonus starter par stade,997,0.428
+trends,+ milieu ou forme finale,997,0.439
+trends,modèle final (+ les deux types),997,0.459
+poty,régression logistique (publié ou non),890,0.282

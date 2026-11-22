@@ -1,93 +1,134 @@
 source,variable,coef,p_valeur
-reddit,constante,0.5494,0.0
-reddit,génération 2,-0.0538,0.0625
-reddit,génération 3,-0.1819,0.0
-reddit,génération 4,-0.17,0.0
-reddit,génération 5,-0.3366,0.0
-reddit,génération 6,-0.2985,0.0
-reddit,génération 7,-0.3801,0.0
-reddit,sans évolution,0.1839,0.0
-reddit,stade 2,0.1342,0.0
-reddit,stade 3,0.2926,0.0
-reddit,starter stade 1,0.4543,0.0
-reddit,starter stade 2,-0.0036,0.9496
-reddit,starter stade 3,0.2354,0.0
-reddit,légendaire,-0.0906,0.0291
-reddit,fabuleux,0.0353,0.5337
-reddit,type Insecte,-0.0487,0.2061
-reddit,type Ténèbres,0.2326,0.0
-reddit,type Dragon,0.1376,0.012
-reddit,type Électrik,0.0734,0.0521
-reddit,type Fée,-0.0685,0.3015
-reddit,type Combat,-0.0432,0.3627
-reddit,type Feu,-0.0067,0.8584
-reddit,type Vol,0.099,0.7158
-reddit,type Spectre,0.1937,0.0
-reddit,type Plante,-0.0287,0.43
-reddit,type Sol,0.0768,0.0983
-reddit,type Glace,0.0183,0.7357
-reddit,type Poison,-0.0113,0.817
-reddit,type Psy,0.0371,0.3521
-reddit,type Roche,-0.0459,0.2539
-reddit,type Acier,0.0707,0.1746
-reddit,type Eau,-0.0202,0.5217
-johto,constante,0.3424,0.0
-johto,sans évolution,0.1192,0.0
-johto,stade 2,0.1481,0.0
-johto,stade 3,0.3958,0.0
-johto,starter stade 1,0.4733,0.0
-johto,starter stade 2,-0.0973,0.0771
-johto,starter stade 3,0.1697,0.0
-johto,légendaire,0.1252,0.0007
-johto,fabuleux,0.2182,0.0002
-johto,type Insecte,-0.049,0.1974
-johto,type Ténèbres,0.1176,0.0119
-johto,type Dragon,0.1068,0.0492
-johto,type Électrik,0.0832,0.0305
-johto,type Fée,0.0317,0.5918
-johto,type Combat,-0.0224,0.6389
-johto,type Feu,0.0427,0.2937
-johto,type Vol,0.0111,0.9118
-johto,type Spectre,0.1875,0.0
-johto,type Plante,-0.0217,0.5355
-johto,type Sol,0.0532,0.2348
-johto,type Glace,-0.0375,0.4956
-johto,type Poison,-0.0537,0.2243
-johto,type Psy,0.0393,0.3047
-johto,type Roche,-0.0334,0.4213
-johto,type Acier,-0.0254,0.5859
-johto,type Eau,-0.0282,0.3937
-trends,constante,0.718,0.0
-trends,génération 2,-0.1784,0.0
-trends,génération 3,-0.2421,0.0
-trends,génération 4,-0.2223,0.0
-trends,génération 5,-0.3822,0.0
-trends,génération 6,-0.2948,0.0
-trends,génération 7,-0.3411,0.0
-trends,génération 8,-0.4142,0.0
-trends,génération 9,-0.4519,0.0
-trends,sans évolution,-0.0017,0.9401
-trends,stade 2,-0.0832,0.0
-trends,stade 3,0.0816,0.0025
-trends,starter stade 1,0.3321,0.0
-trends,starter stade 2,-0.1395,0.0001
-trends,starter stade 3,0.2448,0.0
-trends,légendaire,0.2135,0.0
-trends,fabuleux,0.2944,0.0
-trends,type Insecte,-0.0451,0.1597
-trends,type Ténèbres,0.1158,0.0164
-trends,type Dragon,0.2466,0.0
-trends,type Électrik,0.1237,0.0002
-trends,type Fée,0.0883,0.1019
-trends,type Combat,0.1022,0.0075
-trends,type Feu,0.0935,0.0053
-trends,type Vol,0.1845,0.0137
-trends,type Spectre,0.1053,0.0164
-trends,type Plante,-0.0178,0.5485
-trends,type Sol,0.061,0.0991
-trends,type Glace,-0.01,0.8408
-trends,type Poison,-0.0004,0.993
-trends,type Psy,0.0462,0.2305
-trends,type Roche,0.0226,0.4948
-trends,type Acier,0.1156,0.0081
-trends,type Eau,-0.0046,0.8647
+reddit,constante,0.5746,0.0
+reddit,génération 2,-0.0786,0.0078
+reddit,génération 3,-0.1935,0.0
+reddit,génération 4,-0.2146,0.0
+reddit,génération 5,-0.3498,0.0
+reddit,génération 6,-0.3532,0.0
+reddit,génération 7,-0.4163,0.0
+reddit,sans évolution,0.1624,0.0
+reddit,stade 2 (après un bébé),0.1218,0.0088
+reddit,stade 2 (final),0.2028,0.0
+reddit,stade 2 (milieu),-0.0912,0.0009
+reddit,stade 3,0.2753,0.0
+reddit,starter stade 1,0.4512,0.0
+reddit,starter stade 2,0.2199,0.0002
+reddit,starter stade 3,0.2258,0.0
+reddit,légendaire,-0.0797,0.0461
+reddit,fabuleux,0.0492,0.3849
+reddit,type Insecte,-0.046,0.1261
+reddit,type Ténèbres,0.1342,0.0002
+reddit,type Dragon,0.1613,0.0
+reddit,type Électrik,0.1037,0.0024
+reddit,type Fée,0.0166,0.6933
+reddit,type Combat,-0.0109,0.7598
+reddit,type Feu,0.0251,0.4385
+reddit,type Vol,-0.0056,0.824
+reddit,type Spectre,0.1759,0.0
+reddit,type Plante,-0.0188,0.4892
+reddit,type Sol,0.0071,0.8057
+reddit,type Glace,0.0266,0.4393
+reddit,type Poison,-0.0509,0.1037
+reddit,type Psy,0.0025,0.9336
+reddit,type Roche,-0.0264,0.3515
+reddit,type Acier,0.0668,0.0399
+reddit,type Eau,-0.0406,0.0948
+johto,constante,0.3301,0.0
+johto,sans évolution,0.098,0.0001
+johto,stade 2 (après un bébé),0.1848,0.0092
+johto,stade 2 (final),0.2248,0.0
+johto,stade 2 (milieu),-0.1248,0.0
+johto,stade 3,0.3781,0.0
+johto,starter stade 1,0.4849,0.0
+johto,starter stade 2,0.187,0.0012
+johto,starter stade 3,0.1762,0.0
+johto,légendaire,0.1294,0.0002
+johto,fabuleux,0.2256,0.0001
+johto,type Insecte,-0.0205,0.4687
+johto,type Ténèbres,0.0832,0.008
+johto,type Dragon,0.1644,0.0
+johto,type Électrik,0.1046,0.0006
+johto,type Fée,0.0518,0.1518
+johto,type Combat,-0.004,0.8964
+johto,type Feu,0.0495,0.0863
+johto,type Vol,0.0186,0.4411
+johto,type Spectre,0.1464,0.0
+johto,type Plante,-0.0153,0.5403
+johto,type Sol,0.0179,0.5453
+johto,type Glace,-0.0114,0.7728
+johto,type Poison,-0.0281,0.2777
+johto,type Psy,-0.0008,0.9762
+johto,type Roche,0.0022,0.9379
+johto,type Acier,0.0039,0.8994
+johto,type Eau,-0.0383,0.1102
+trends,constante,0.7378,0.0
+trends,génération 2,-0.1914,0.0
+trends,génération 3,-0.2465,0.0
+trends,génération 4,-0.2469,0.0
+trends,génération 5,-0.3932,0.0
+trends,génération 6,-0.3085,0.0
+trends,génération 7,-0.3673,0.0
+trends,génération 8,-0.4228,0.0
+trends,génération 9,-0.4782,0.0
+trends,sans évolution,-0.0195,0.3771
+trends,stade 2 (après un bébé),0.0195,0.8574
+trends,stade 2 (final),-0.0671,0.0006
+trends,stade 2 (milieu),-0.187,0.0
+trends,stade 3,0.0621,0.0193
+trends,starter stade 1,0.3515,0.0
+trends,starter stade 2,-0.0246,0.5482
+trends,starter stade 3,0.2472,0.0
+trends,légendaire,0.2134,0.0
+trends,fabuleux,0.302,0.0
+trends,type Insecte,-0.0574,0.0257
+trends,type Ténèbres,0.0692,0.0377
+trends,type Dragon,0.219,0.0
+trends,type Électrik,0.1029,0.0003
+trends,type Fée,0.0447,0.21
+trends,type Combat,0.061,0.0255
+trends,type Feu,0.0756,0.0077
+trends,type Vol,0.0183,0.4031
+trends,type Spectre,0.1078,0.0003
+trends,type Plante,-0.0481,0.0298
+trends,type Sol,0.0403,0.131
+trends,type Glace,-0.0076,0.8346
+trends,type Poison,-0.0098,0.726
+trends,type Psy,0.0281,0.3112
+trends,type Roche,0.0108,0.6802
+trends,type Acier,0.1025,0.0005
+trends,type Eau,-0.0321,0.1222
+poty,constante,-2.3964,0.0
+poty,génération 2,0.421,0.2421
+poty,génération 3,-0.2592,0.4718
+poty,génération 4,-0.3833,0.2995
+poty,génération 5,-0.6722,0.062
+poty,génération 6,0.5782,0.1509
+poty,génération 7,0.1945,0.617
+poty,génération 8,0.113,0.7701
+poty,sans évolution,0.8136,0.0152
+poty,stade 2 (après un bébé),-0.0922,0.9342
+poty,stade 2 (final),1.3406,0.0
+poty,stade 2 (milieu),-1.3511,0.0363
+poty,stade 3,2.0946,0.0
+poty,starter stade 1,4.7326,0.0
+poty,starter stade 2,2.0056,0.0274
+poty,starter stade 3,2.5366,0.0003
+poty,légendaire,1.4626,0.0003
+poty,fabuleux,3.0722,0.0
+poty,type Insecte,0.2181,0.5255
+poty,type Ténèbres,1.0399,0.0044
+poty,type Dragon,1.485,0.0
+poty,type Électrik,1.0002,0.0067
+poty,type Fée,0.1212,0.7618
+poty,type Combat,0.1223,0.7512
+poty,type Feu,0.1058,0.7797
+poty,type Vol,-0.4328,0.1801
+poty,type Spectre,1.1859,0.0016
+poty,type Plante,-0.4465,0.2012
+poty,type Sol,-0.1486,0.6973
+poty,type Glace,0.2483,0.5592
+poty,type Poison,-0.2583,0.5183
+poty,type Psy,0.1974,0.554
+poty,type Roche,-0.5316,0.2167
+poty,type Acier,0.359,0.3383
+poty,type Eau,-0.4805,0.1273

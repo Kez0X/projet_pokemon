@@ -119,7 +119,7 @@ def bloc_residus():
     n_sur = int((s["sur_cote"] == "partout").sum())
     n_sous = int((s["sous_cote"] == "partout").sum())
     mod = _modeles()
-    r2 = mod[mod["modele"] == "bonus starter par stade"].set_index("source")["r2_ajuste"]
+    r2 = mod[mod["modele"] == "modèle final (+ les deux types)"].set_index("source")["r2_ajuste"]
 
     # montrer : un effet à la fois (type, Johto Times)
     tm = table_maitre()[["dex", "type1"]].merge(popularite()[["dex", "johto_pct_gen"]], on="dex")
@@ -218,10 +218,13 @@ def bloc_residus():
                      "retrouver dans ce qui reste. Ici, les effets au Johto Times (en gris : pas significatif) :"),
               t.mini(f2, 520, "À autres effets égaux, de combien de points de percentile chaque effet fait monter ou descendre.")],
              "hors"),
-            ("On a corrigé le modèle pour les starters",
+            ("On a corrigé le modèle pour les étapes du milieu",
              "Avec un seul bonus « starter » pour toute la lignée, les formes du milieu sortaient sous-cotées à tort (voir le "
-             "bloc des starters plus bas). Du coup on a mis un effet starter par stade : sur le graphique au-dessus, le "
-             "starter de stade 2 ne gagne rien alors que les stades 1 et 3 gagnent beaucoup.", "hors"),
+             "bloc des starters plus bas) : on a donc mis un effet starter par stade. Puis on a vu que ce creux du milieu "
+             "existe dans toutes les lignées : une étape du milieu (Drackhaus) est deux fois moins aimée qu'une forme finale "
+             "de stade 2 (Arcanin). Le modèle final sépare donc « milieu » et « final » (et met à part les Pokémon placés "
+             "au milieu par un bébé ajouté plus tard, comme Pikachu), et compte les deux types de chaque Pokémon. Sans ça, "
+             "plus d'un tiers des sous-cotés étaient des étapes du milieu, accusées à tort.", "hors"),
             ("On a calculé les résidus",
              [html.P("Résidu = popularité réelle − popularité prévue. Sur le nuage, un point au-dessus de la diagonale est "
                      "plus aimé que prévu. En vert les sur-cotés partout, en rouge les sous-cotés partout."),
