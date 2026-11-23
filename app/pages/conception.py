@@ -153,6 +153,12 @@ def methode_couleurs(dex):
 
 
 # ---------- 2. Design ou nostalgie ----------
+def _part_expliquee(reg, source):
+    """Part de l'écart moyen entre générations que le design explique (effets attendus -> tout le design)."""
+    r = reg[reg["source"] == source]
+    return 1 - r["coef_tout_le_design"].abs().mean() / r["coef_effets_attendus"].abs().mean()
+
+
 def bloc_acp():
     d = pca().merge(table_maitre()[["dex", "generation", "nom_fr"]], on="dex")
     centres = d.groupby("generation")[["PC1", "PC2"]].mean()
@@ -210,10 +216,12 @@ def bloc_acp():
     f4 = go.Figure()
     for src, nom, coul in [("reddit", "Reddit", t.ROUGE), ("trends", "Google", t.GLACE)]:
         s = reg[reg["source"] == src]
-        f4.add_trace(go.Scatter(x=s["generation"], y=s["coef_sans_axes"] * 100, mode="lines+markers", name=f"{nom}, génération seule",
-                                line=dict(color=coul, width=2), hovertemplate="gén. %{x} : %{y:+.0f}<extra></extra>"))
-        f4.add_trace(go.Scatter(x=s["generation"], y=s["coef_avec_axes"] * 100, mode="lines+markers", name=f"{nom}, + design",
-                                line=dict(color=coul, width=2, dash="dot"), hovertemplate="gén. %{x} : %{y:+.0f}<extra></extra>"))
+        f4.add_trace(go.Scatter(x=s["generation"], y=s["coef_effets_attendus"] * 100, mode="lines+markers",
+                                name=f"{nom}, effets attendus", line=dict(color=coul, width=2),
+                                hovertemplate="gén. %{x} : %{y:+.0f}<extra></extra>"))
+        f4.add_trace(go.Scatter(x=s["generation"], y=s["coef_tout_le_design"] * 100, mode="lines+markers",
+                                name=f"{nom}, + tout le design", line=dict(color=coul, width=2, dash="dot"),
+                                hovertemplate="gén. %{x} : %{y:+.0f}<extra></extra>"))
     f4.update_layout(showlegend=True)
     f4.update_xaxes(title="génération (par rapport à la 1re)", dtick=1)
     f4.update_yaxes(title="effet sur le percentile (points)")
@@ -260,15 +268,19 @@ def bloc_acp():
               t.mini(f3, 240, "Corrélation de Spearman entre chaque axe et la popularité dans la génération.")],
              "exploration"),
             ("On a vu si le design « absorbe » l'effet génération",
-             [html.P(f"Une régression popularité ~ génération, puis la même avec les 4 axes en plus. Le R² monte (Reddit "
-                     f"{t.pct(r2[('reddit', 'génération seule')])} → {t.pct(r2[('reddit', 'génération + axes')])} %), donc "
-                     "le design apporte de l'information. Mais les effets des générations ne bougent presque pas : les "
-                     "lignes pleines et pointillées sont collées. L'écart entre générations ne passe pas par le design."),
-              t.mini(f4, 280, "Effet de chaque génération, sans (plein) et avec (pointillé) les axes de design.")],
+             [html.P("Une régression popularité ~ génération, en partant des effets attendus du notebook 05 (position dans "
+                     "la lignée, starters, légendaires, types), puis on ajoute l'apparence (taille, poids, couleurs, forme du "
+                     "corps, niveau de détail du dessin) et les stats. Le R² monte un peu (Reddit "
+                     f"{t.pct(r2[('reddit', '+ effets attendus')])} → {t.pct(r2[('reddit', '+ stats de combat')])} %), mais "
+                     f"l'écart entre générations ne baisse que de {t.pct(_part_expliquee(reg, 'reddit'))} % sur Reddit et "
+                     f"{t.pct(_part_expliquee(reg, 'trends'))} % sur Google : les lignes pleines et pointillées sont collées. "
+                     "L'écart entre générations ne passe pas par le design."),
+              t.mini(f4, 280, "Effet de chaque génération avec les effets attendus (plein), puis avec tout le design en plus (pointillé).")],
              "hors"),
         ], attention="les 6 stats font la moitié des variables, elles pèsent lourd dans l'axe 1. Et ça montre seulement "
-                     "que ce n'est pas le design mesuré ici (taille, stats, couleurs) qui explique l'écart, pas que c'est "
-                     "la nostalgie : le style de dessin ou l'anime ne sont pas mesurés."),
+                     "que ce n'est pas le design mesuré ici qui explique l'écart, pas que c'est la nostalgie : le style de "
+                     "dessin ou l'anime ne sont pas mesurés. Un indice va dans ce sens : au Johto Times, le nombre de "
+                     "participants baisse à chaque génération (14 478 pour Kanto, 9 254 pour Paldea)."),
     )
 
 
