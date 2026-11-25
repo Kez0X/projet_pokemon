@@ -13,7 +13,7 @@ from donnees import PROCESSED, popularite, reseau_aretes, reseau_noeuds
 
 dash.register_page(__name__, path="/reseau", name="Le réseau", order=6)
 
-SOURCES = {"johto_pct_gen": "Johto Times", "reddit_pct": "Reddit", "trends_pct_median": "Google"}
+SOURCES = {"johto_pct_gen": "Johto Times", "reddit_pct_gen": "Reddit", "trends_pct_gen": "Google"}
 
 
 def _p(p):
@@ -62,7 +62,7 @@ def _figure(dex_choisi, source):
         marker=dict(size=6 + 10 * pop.fillna(0), color=pop.fillna(-1),
                     colorscale=[[0, "#d9d2c3"], [.001, "#e9e3d6"], [1, t.SAPIN]], cmin=-.001, cmax=1,
                     line=dict(color="#fffaf0", width=.5),
-                    colorbar=dict(title="Popularité<br>(percentile)", thickness=10, len=.6, tickformat=".0%",
+                    colorbar=dict(title="Popularité<br>(pct. dans la gén.)", thickness=10, len=.6, tickformat=".0%",
                                   tickvals=[0, .25, .5, .75, 1])),
         text=n["nom_fr"], customdata=np.stack([n.index, n["communaute_nom"], pop.fillna(-1)], axis=1),
         hovertemplate="<b>%{text}</b><br>%{customdata[1]}<extra></extra>",
@@ -151,6 +151,9 @@ def bloc_reseau():
     f_ce.add_hline(y=0, line_color=t.GRIS_FONCE)
 
     asso = _m("assortativite")
+    asso["mesure"] = asso["mesure"].replace({
+        "reddit": "Reddit", "johto": "Johto Times", "trends": "Google", "poty": "POTY (publié ou non)",
+        "resid_reddit": "résidu Reddit", "resid_johto": "résidu Johto", "resid_trends": "résidu Google"})
     f_as = go.Figure([
         go.Bar(x=asso["mesure"], y=asso["assortativite"], name="observée", marker_color=t.SAPIN, marker_cornerradius=3),
         go.Bar(x=asso["mesure"], y=asso["max_hasard"], name="max sur 200 mélanges au hasard", marker_color=t.GRIS,
@@ -224,15 +227,18 @@ def bloc_reseau():
              "reseaux"),
             ("On a comparé la popularité des familles",
              [html.P(f"Test de Kruskal-Wallis (la version sans hypothèse de normalité de l'ANOVA) : les familles n'ont pas "
-                     f"la même popularité dans les sondages (p {_p(kw.get('johto', np.nan))} au Johto Times), "
-                     f"et un peu aussi sur Google (p {_p(kw.get('trends', np.nan))}), mais l'écart y est faible : il ne passe sous "
-                     "le seuil de 5 % que depuis la deuxième collecte, qui a précisé le bas du classement."),
+                     f"la même popularité (p {_p(kw.get('johto', np.nan))} au Johto Times, p {_p(kw.get('trends', np.nan))} sur "
+                     f"Google, en percentile dans la génération). Même chose pour Pokémon of the Year (khi² sur la part de "
+                     f"publiés, p {_p(kw.get('poty', np.nan))}) : 39 % des Pokémon de la famille « bleu · Eau » sont publiés, "
+                     "contre 6 % des « carapaces ». Mais une fois les effets attendus retirés (résidus du notebook 05), il ne "
+                     "reste presque rien : l'écart passe surtout par le type."),
               t.mini(f_cp, 340, "Popularité moyenne de chaque communauté, source par source.")],
              ["reseaux", "hors"]),
             ("Centralités et popularité",
              [html.P("Pour chaque Pokémon : degré, intermédiarité (est-il un pont entre familles ?), proximité, clustering "
                      "local, et similarité moyenne à ses voisins (est-il « original » ?). Puis Spearman avec la popularité : "
-                     "tout est proche de 0."),
+                     "tout est proche de 0. Avec 42 tests d'un coup, on corrige les p-valeurs (Holm) : les quelques liens "
+                     "qui restent sont minuscules (rho de 0,15 au plus) et presque tous sur Google."),
               t.mini(f_ce, 240, "Spearman entre chaque centralité et la popularité.")],
              ["reseaux", "exploration"]),
             ("Les populaires ont-ils des voisins populaires ?",
@@ -250,7 +256,9 @@ def bloc_reseau():
              "du haut. On a vérifié avec la trustworthiness (0,99) que les voisins sur la carte sont bien des voisins dans "
              "le réseau.", "transfo"),
         ], attention="sur une carte t-SNE, « proche » a un sens mais « loin » n'en a pas : on ne lit pas les distances "
-                     "entre îlots. Et les communautés dépendent beaucoup des variables choisies (surtout couleur et forme)."),
+                     "entre îlots. Et les communautés dépendent beaucoup des variables choisies : sans la couleur officielle, on "
+                     "obtient 18 familles très différentes (ARI 0,19). Les conclusions sur la popularité, elles, ne changent "
+                     "pas (écarts entre familles, voisins populaires, rien sur les résidus)."),
     )
 
 
@@ -276,7 +284,7 @@ def maj(dex, source):
         html.H3(r["nom_fr"]),
         html.P(f"Famille « {r['communaute_nom']} » · {int(r['degre'])} liens"),
         html.Div(className="pop-bloc", children=[
-            html.Div("Sa popularité (percentile)", className="pop-titre"),
+            html.Div("Sa popularité (percentile dans sa génération)", className="pop-titre"),
             *[barre_pop(nom, r[col]) for col, nom in SOURCES.items()],
             html.Div(f"Moyenne de sa famille : {com['johto_pct_gen'].mean() * 100:.0f} au Johto Times", className="note"),
         ]),
