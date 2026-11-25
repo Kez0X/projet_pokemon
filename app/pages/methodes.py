@@ -22,8 +22,8 @@ METHODES = [
     ("Statistique spatiale", "Indice de Moran et LISA",
      "Le monde"),
     ("Tests (hors cours)", "Transcription phonétique (espeak-ng), test du signe sur les lignées d'évolution, "
-     "Mann-Whitney, correction de Holm pour les tests multiples",
-     "Les noms"),
+     "Mann-Whitney, Kruskal-Wallis, tests par permutation, correction de Holm pour les tests multiples",
+     "Les noms, Le réseau"),
 ]
 
 SOURCES = [
