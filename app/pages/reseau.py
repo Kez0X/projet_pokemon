@@ -152,7 +152,7 @@ def bloc_reseau():
 
     asso = _m("assortativite")
     asso["mesure"] = asso["mesure"].replace({
-        "reddit": "Reddit", "johto": "Johto Times", "trends": "Google", "poty": "POTY (publié ou non)",
+        "reddit": "Reddit", "johto": "Johto Times", "trends": "Google", "poty": "POTY (dans la génération)",
         "resid_reddit": "résidu Reddit", "resid_johto": "résidu Johto", "resid_trends": "résidu Google"})
     f_as = go.Figure([
         go.Bar(x=asso["mesure"], y=asso["assortativite"], name="observée", marker_color=t.SAPIN, marker_cornerradius=3),
@@ -228,9 +228,10 @@ def bloc_reseau():
             ("On a comparé la popularité des familles",
              [html.P(f"Test de Kruskal-Wallis (la version sans hypothèse de normalité de l'ANOVA) : les familles n'ont pas "
                      f"la même popularité (p {_p(kw.get('johto', np.nan))} au Johto Times, p {_p(kw.get('trends', np.nan))} sur "
-                     f"Google, en percentile dans la génération). Même chose pour Pokémon of the Year (khi² sur la part de "
-                     f"publiés, p {_p(kw.get('poty', np.nan))}) : 39 % des Pokémon de la famille « bleu · Eau » sont publiés, "
-                     "contre 6 % des « carapaces ». Mais une fois les effets attendus retirés (résidus du notebook 05), il ne "
+                     f"Google, en percentile dans la génération). Même chose pour Pokémon of the Year, à génération fixée "
+                     f"(régression logistique, p {_p(kw.get('poty', np.nan))}) : vu leurs générations, on attendait environ "
+                     "27 % de publiés partout, et on en a 39 % dans la famille « bleu · Eau » contre 6 % chez les "
+                     "« carapaces ». Mais une fois les effets attendus retirés (résidus du notebook 05), il ne "
                      "reste presque rien : l'écart passe surtout par le type."),
               t.mini(f_cp, 340, "Popularité moyenne de chaque communauté, source par source.")],
              ["reseaux", "hors"]),
@@ -238,7 +239,7 @@ def bloc_reseau():
              [html.P("Pour chaque Pokémon : degré, intermédiarité (est-il un pont entre familles ?), proximité, clustering "
                      "local, et similarité moyenne à ses voisins (est-il « original » ?). Puis Spearman avec la popularité : "
                      "tout est proche de 0. Avec 42 tests d'un coup, on corrige les p-valeurs (Holm) : les quelques liens "
-                     "qui restent sont minuscules (rho de 0,15 au plus) et presque tous sur Google."),
+                     "qui restent sont minuscules (rho de 0,15 au plus) et tous sur Google."),
               t.mini(f_ce, 240, "Spearman entre chaque centralité et la popularité.")],
              ["reseaux", "exploration"]),
             ("Les populaires ont-ils des voisins populaires ?",
