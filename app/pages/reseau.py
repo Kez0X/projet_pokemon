@@ -13,10 +13,7 @@ from donnees import PROCESSED, popularite, reseau_aretes, reseau_noeuds
 
 dash.register_page(__name__, path="/reseau", name="Le réseau", order=6)
 
-# toutes les sources en percentile dans la génération, comme dans le notebook 07
 SOURCES = {"johto_pct_gen": "Johto Times", "reddit_pct_gen": "Reddit", "trends_pct_gen": "Google"}
-MESURES = {"reddit": "Reddit", "johto": "Johto Times", "trends": "Google", "poty": "Pokémon of the Year",
-           "resid_reddit": "Reddit (résidus)", "resid_johto": "Johto (résidus)", "resid_trends": "Google (résidus)"}
 
 
 def _p(p):
@@ -65,7 +62,7 @@ def _figure(dex_choisi, source):
         marker=dict(size=6 + 10 * pop.fillna(0), color=pop.fillna(-1),
                     colorscale=[[0, "#d9d2c3"], [.001, "#e9e3d6"], [1, t.SAPIN]], cmin=-.001, cmax=1,
                     line=dict(color="#fffaf0", width=.5),
-                    colorbar=dict(title="Popularité<br>(percentile dans<br>la génération)", thickness=10, len=.6, tickformat=".0%",
+                    colorbar=dict(title="Popularité<br>(pct. dans la gén.)", thickness=10, len=.6, tickformat=".0%",
                                   tickvals=[0, .25, .5, .75, 1])),
         text=n["nom_fr"], customdata=np.stack([n.index, n["communaute_nom"], pop.fillna(-1)], axis=1),
         hovertemplate="<b>%{text}</b><br>%{customdata[1]}<extra></extra>",
@@ -168,7 +165,9 @@ def bloc_reseau():
     f_ce.add_hline(y=0, line_color=t.GRIS_FONCE)
 
     asso = _m("assortativite")
-    asso = asso.assign(mesure=asso["mesure"].map(MESURES))
+    asso["mesure"] = asso["mesure"].replace({
+        "reddit": "Reddit", "johto": "Johto Times", "trends": "Google", "poty": "POTY (dans la génération)",
+        "resid_reddit": "résidu Reddit", "resid_johto": "résidu Johto", "resid_trends": "résidu Google"})
     f_as = go.Figure([
         go.Bar(x=asso["mesure"], y=asso["assortativite"], name="observée", marker_color=t.SAPIN, marker_cornerradius=3),
         go.Bar(x=asso["mesure"], y=asso["max_hasard"], name="max sur 200 mélanges au hasard", marker_color=t.GRIS,
@@ -189,7 +188,7 @@ def bloc_reseau():
             _ligne("… une fois les effets attendus retirés", "Kruskal-Wallis resid_johto (p Holm)", lambda v: t.fr(v, 2)),
             _ligne("Pokémon of the Year, écart à la génération (p)", "Pokémon of the Year, écart à la génération (p)", _p),
             _ligne("assortativité au Johto Times", "assortativité johto", t.fr),
-            _ligne("centralités liées à la popularité (après Holm, sur 36)", "centralités significatives après Holm (sur 36)",
+            _ligne("centralités liées à la popularité (après Holm, sur 42)", "centralités significatives après Holm (sur 42)",
                    lambda v: f"{v:.0f}"),
         ])])
     ari_sc = sc.at["ARI avec le réseau complet", "sans_couleur"]
@@ -259,37 +258,35 @@ def bloc_reseau():
              "reseaux"),
             ("On a comparé la popularité des familles",
              [html.P(f"Test de Kruskal-Wallis (la version sans hypothèse de normalité de l'ANOVA), avec la correction de Holm "
-                     f"sur les 6 tests : les familles n'ont pas la même popularité dans les sondages (p {_p(kw.get('johto', np.nan))} "
-                     f"au Johto Times), et un peu aussi sur Google (p {_p(kw.get('trends', np.nan))}), avec un écart plus faible. "
-                     "La popularité est en percentile dans la génération : les familles n'ont pas toutes autant de Pokémon "
-                     "récents, et les récents sont moins aimés. Une fois les effets attendus retirés (résidus du modèle "
-                     f"« Sur / sous-cotés »), plus rien ne tient (p {_p(kw.get('resid_johto', np.nan))} au Johto Times)."),
+                     f"sur les 7 tests : les familles n'ont pas la même popularité (p {_p(kw.get('johto', np.nan))} au Johto "
+                     f"Times, p {_p(kw.get('trends', np.nan))} sur Google, en percentile dans la génération). Même chose pour "
+                     f"Pokémon of the Year, à génération fixée (régression logistique, p {_p(kw.get('poty', np.nan))}). Mais une "
+                     "fois les effets attendus retirés (résidus du modèle « Sur / sous-cotés »), plus rien ne tient "
+                     f"(p {_p(kw.get('resid_johto', np.nan))} au Johto Times) : l'écart passe surtout par le type."),
               t.mini(f_cp, 340, "Popularité moyenne de chaque communauté, source par source.")],
              ["reseaux", "hors"]),
             ("Pokémon of the Year : plus de publiés que prévu ?",
              [html.P(["On ne connaît que le top 30 de chaque génération, donc la chance d'être publié dépend surtout de la "
                       "taille de la génération (20 % en génération 1, 42 % en génération 6). On compare donc la part de publiés "
-                      "de chaque famille à celle qu'on attendrait vu ses générations, avec un test par permutation : on mélange "
-                      "« publié / pas publié » à l'intérieur de chaque génération, 2 000 fois. Les familles s'écartent bien de "
-                      f"ce que prévoit la génération (p {_p(p_poty)}), dans le même ordre que les sondages (Eau, Électrik et "
-                      "noirs en haut, carapaces et poissons en bas). Après Holm, une seule famille tient : ",
+                      "de chaque famille à celle qu'on attendrait vu ses générations (environ 27 % partout), avec un test par "
+                      "permutation : on mélange « publié / pas publié » à l'intérieur de chaque génération, 2 000 fois. Les "
+                      f"familles s'écartent bien de ce que prévoit la génération (p {_p(p_poty)}), dans le même ordre que les "
+                      "sondages (39 % chez « bleu · Eau », 6 % chez les « carapaces »). Après Holm, une seule famille tient : ",
                       html.Strong(", ".join(po_bas["nom"])), f" ({po_bas['publies'].sum():.0f} publiés au lieu de "
                       f"{po_bas['attendus'].sum():.0f})."]),
               t.mini(f_po, 380, "Part de publiés au Pokémon of the Year 2020, et part attendue vu les générations.")],
              ["hors"]),
             ("Centralités et popularité",
              [html.P("Pour chaque Pokémon : degré, intermédiarité (est-il un pont entre familles ?), proximité, clustering "
-                     "local, et similarité moyenne à ses voisins (est-il « original » ?). Puis Spearman avec la popularité, "
-                     "et la correction de Holm sur les 36 tests : il ne reste que des liens faibles sur Google (un Pokémon "
-                     "au centre du réseau est un peu plus cherché), rien dans les sondages, et rien une fois les effets "
-                     "attendus retirés."),
+                     "local, et similarité moyenne à ses voisins (est-il « original » ?). Puis Spearman avec la popularité : "
+                     "tout est proche de 0. Avec 42 tests d'un coup, on corrige les p-valeurs (Holm) : les quelques liens "
+                     "qui restent sont minuscules (rho de 0,15 au plus) et tous sur Google."),
               t.mini(f_ce, 240, "Spearman entre chaque centralité et la popularité (hachuré : pas significatif après Holm).")],
              ["reseaux", "exploration"]),
             ("Les populaires ont-ils des voisins populaires ?",
              [html.P("On a calculé l'assortativité (les deux bouts d'un lien ont-ils une popularité proche ?) et on l'a "
                      "comparée à 200 mélanges au hasard de la popularité (test de permutation). Elle est faible mais au-dessus "
-                     "du hasard dans les quatre sources (pour Pokémon of the Year, on regarde « publié ou non » et on mélange "
-                     "dans la génération) ; sur les résidus (effets attendus retirés), elle devient très petite."),
+                     "du hasard ; sur les résidus (effets attendus retirés), elle devient très petite."),
               html.Div(className="deux-colonnes", style={"gridTemplateColumns": "1fr 1fr"}, children=[
                   t.mini(f_as, 240, "Assortativité observée contre le hasard."),
                   t.mini(f_v, 240, "La popularité d'un Pokémon et celle de ses voisins."),
@@ -309,8 +306,9 @@ def bloc_reseau():
              "du haut. On a vérifié avec la trustworthiness (0,99) que les voisins sur la carte sont bien des voisins dans "
              "le réseau.", "transfo"),
         ], attention="sur une carte t-SNE, « proche » a un sens mais « loin » n'en a pas : on ne lit pas les distances "
-                     "entre îlots. Et les communautés dépendent beaucoup des variables choisies : sans la couleur "
-                     "officielle, ce ne sont plus les mêmes familles, même si les conclusions sur la popularité tiennent."),
+                     "entre îlots. Et les communautés dépendent beaucoup des variables choisies : sans la couleur officielle, on "
+                     "obtient 18 familles très différentes (ARI 0,19). Les conclusions sur la popularité, elles, ne changent "
+                     "pas (écarts entre familles, voisins populaires, rien sur les résidus)."),
     )
 
 
@@ -336,7 +334,7 @@ def maj(dex, source):
         html.H3(r["nom_fr"]),
         html.P(f"Famille « {r['communaute_nom']} » · {int(r['degre'])} liens"),
         html.Div(className="pop-bloc", children=[
-            html.Div("Sa popularité (percentile)", className="pop-titre"),
+            html.Div("Sa popularité (percentile dans sa génération)", className="pop-titre"),
             *[barre_pop(nom, r[col]) for col, nom in SOURCES.items()],
             html.Div("Pokémon of the Year 2020 : " + ("pas votable (après le n° 890)" if dex > 890 else
                      "dans le top 30 de sa génération" if pd.notna(r["poty_pct_gen"]) else "hors du top 30 de sa génération"),
